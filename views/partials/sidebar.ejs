@@ -1,0 +1,14 @@
+<nav class="sidebar">
+    <div class="logo">
+        <h1>Kapelang <br/><span>est. 2024</span></h1>
+    </div>
+
+    <ul class="menu-list">
+        <li class="list"><a href="/">Home</a></li>
+        <li class="list"><a href="/menu">Menu</a></li>
+        <li class="list"><a href="/cart">Order</a></li>
+        <% if(pageTitle !== 'Login' && pageTitle !== 'Register') { %>
+        <li class="list login"><a class='login-btn' href="/login">Login</a></li>
+        <% } %>
+    </ul>
+</nav>

@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+    --main-color: #E4E0E1;
+
+    --bg-color: #493628;
+
+    --accent: #AB886D;
+    --accent-2: #803D3B; 
+
+    --ff-main: "Noto Serif", serif;
+    --ff-secondary: "Montserrat", sans-serif;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/*
+    GLOBAL
+*/
+
+.main__container {
+    display: flex;
+}
+
+.container {
+    color: var(--main-color);
+    font-family: var(--ff-secondary);
+}
+
+.default-topo {
+    font-size: 1.25rem;
+    padding-block: 1rem;
+}
+
+/*
+   NON GLOBAL
+*/
+
+main {
+    width: 70%;
+    margin: 0 auto;
+    padding-top: 3rem;
+}
+
+body {
+    background-image: url('/img/main_bg.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+header {
+    min-width: 20%;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    background-color: var(--bg-color);
+    color: var(--main-color);
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 180px;
+    text-align: center;
+    align-items: center;
+}
+
+.logo {
+    font-family: var(--ff-main);
+}
+
+.logo h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 2rem;
+}
+
+.logo h1 span {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.menu-list {
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-direction: column;
+}
+
+.list:not(.login) a {
+    position: relative;
+    text-decoration: none;
+    font-family: var(--ff-secondary);
+    color: var(--main-color);
+    font-size: 1.25rem;
+    padding: 10px 20px;
+}
+
+.list a:not(.login-btn):before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 10%;
+    background-color: var(--main-color);
+    transition: .5s ease;
+}
+
+.list a:not(.login-btn):hover:before {
+    width: 100%;
+    color: black;
+}
+
+.login {
+    border: 2px solid var(--accent-2);
+    border-radius: 20px;
+    padding: 10px 30px;
+    transition: .5s ease;
+}
+
+.login a {
+    text-decoration: none;
+    font-family: var(--ff-secondary);
+    color: var(--main-color);
+    font-size: 1.25rem;
+}
+
+.login:hover {
+    background-color: var(--accent-2);
+}
+
+.hero__intro h1 {
+    font-weight: 400;
+}
+
+.hero__intro h1 .logo {
+    font-weight: 600;
+    color: var(--accent);
+}
