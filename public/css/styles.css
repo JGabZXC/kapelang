@@ -32,6 +32,10 @@
     font-family: var(--ff-secondary);
 }
 
+.m-bott-m {
+    margin: 1.25rem;
+}
+
 .default-topo {
     font-size: 1.25rem;
     padding-block: 1rem;
@@ -115,7 +119,7 @@ header {
     height: 2px;
     width: 10%;
     background-color: var(--main-color);
-    transition: .5s ease;
+    transition: .2s ease;
 }
 
 .list a:not(.login-btn):hover:before {
@@ -127,7 +131,7 @@ header {
     border: 2px solid var(--accent-2);
     border-radius: 20px;
     padding: 10px 30px;
-    transition: .5s ease;
+    transition: .2s ease;
 }
 
 .login a {
@@ -149,3 +153,40 @@ header {
     font-weight: 600;
     color: var(--accent);
 }
+
+
+/* 
+
+FEATURED ITEMS
+
+*/
+
+.featured-items {
+    display: flex;
+    gap: 1.25rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.items {
+    text-align: center;
+}
+
+.circle-img {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.circle-img img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+    transition: .2s ease;
+}
+
+.circle-img img:hover {
+    scale: 1.2;
+}
+

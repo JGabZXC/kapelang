@@ -15,11 +15,14 @@ app.use(express.static("public/img"));
 
 app.get("/", (req, res) => {
   const title = "Kapelang";
-  res.status(200).render("../views/index.ejs", { pageTitle: title });
+  res.status(200).render("../views/index.ejs", { pageTitle: title, login });
 });
 
+const login = false;
+
 app.get("/menu", (req, res) => {
-  res.send("this is menu page");
+  const title = "Kapelang | Menu";
+  res.render("../views/pages/login.ejs", { pageTitle: title, login });
 });
 
 app.get("/cart", (req, res) => {
@@ -28,7 +31,7 @@ app.get("/cart", (req, res) => {
 
 app.get("/login", (req, res) => {
   const title = "Login";
-  res.render("../views/pages/login.ejs", { pageTitle: title });
+  res.render("../views/pages/login.ejs", { pageTitle: title, login });
 });
 
 app.get("/register", (req, res) => {
@@ -36,7 +39,7 @@ app.get("/register", (req, res) => {
 });
 
 app.get("*", (req, res) => {
-  res.status(400).send("Error 404");
+  res.status(400).send(`Error 404 <a href="/">Go back <a/>`);
 });
 
 app.listen(port, () => {
