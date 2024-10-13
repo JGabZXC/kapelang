@@ -2,6 +2,7 @@
 
 import express from "express";
 import bodyParser from "body-parser";
+import db from "./db.js";
 
 const app = express();
 const port = 3000; // Change mo nalang sa ENV kung san ka komportable
@@ -31,8 +32,18 @@ app.get("/cart", (req, res) => {
 
 app.get("/login", (req, res) => {
   const title = "Login";
+  console.log(req.body);
   res.render("../views/pages/login.ejs", { pageTitle: title, login });
 });
+
+app.post("/login/submit", async (req, res) => {
+  const { uEmail, uPass } = req.body;
+  const result = await db.query("SELECT * FROM users");
+  console.log(result.rows);
+  res.send(uEmail);
+});
+
+// app.use("/", router);
 
 app.get("/register", (req, res) => {
   res.send("this is a register");
