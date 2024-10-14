@@ -14,39 +14,113 @@ app.use(express.static("public/css"));
 app.use(express.static("public/js"));
 app.use(express.static("public/img"));
 
+const login = false;
+
+// Replace user first name and last name first letter to upper case
+const correctName = function (first, last) {
+  const fName = first.toLowerCase();
+  const lName = last.toLowerCase();
+  const fullName = `${fName[0].toUpperCase() + fName.slice(1)} ${
+    lName[0].toUpperCase() + lName.slice(1)
+  }`;
+  return fullName;
+};
+
 app.get("/", (req, res) => {
   const title = "Kapelang";
   res.status(200).render("../views/index.ejs", { pageTitle: title, login });
 });
 
-const login = false;
-
 app.get("/menu", (req, res) => {
   const title = "Kapelang | Menu";
-  res.render("../views/pages/login.ejs", { pageTitle: title, login });
+  res
+    .status(200)
+    .render("../views/pages/menu.ejs", { pageTitle: title, login });
 });
 
 app.get("/cart", (req, res) => {
-  res.send("this is cart page");
+  res.status(200).send("this is cart page");
 });
 
 app.get("/login", (req, res) => {
   const title = "Login";
-  console.log(req.body);
-  res.render("../views/pages/login.ejs", { pageTitle: title, login });
+  res
+    .status(200)
+    .render("../views/pages/login.ejs", { pageTitle: title, login });
 });
 
+// Submit Login
 app.post("/login/submit", async (req, res) => {
   const { uEmail, uPass } = req.body;
   const result = await db.query("SELECT * FROM users");
-  console.log(result.rows);
-  res.send(uEmail);
+  res.status(200).send(uEmail);
 });
 
 // app.use("/", router);
 
 app.get("/register", (req, res) => {
-  res.send("this is a register");
+  const title = "Register";
+  res
+    .status(200)
+    .render("../views/pages/register.ejs", { pageTitle: title, login });
+});
+
+// Submit Register
+app.post("/register/submit", async (req, res) => {
+  const { uEmail, uPass, uRePass, uAddress, uFName, uLName } = req.body;
+  const checkEmail = await db.query(
+    "SELECT email FROM users WHERE email = $1",
+    [uEmail]
+  );
+  const title = "Register";
+
+  if (checkEmail.rows.length > 0) {
+    const regError = "Email already exist!";
+    const data = {
+      fName: uFName,
+      lName: uLName,
+      email: uEmail,
+      pass: uPass,
+      repass: uRePass,
+      address: uAddress,
+    };
+    res.render("../views/pages/register.ejs", {
+      pageTitle: title,
+      regError,
+      data,
+    });
+  } else if (uPass === uRePass) {
+    const fullName = correctName(uFName, uLName);
+    const insert = await db.query(
+      "INSERT INTO users (email, password, address, full_name) VALUES ($1, $2, $3, $4)",
+      [uEmail, uPass, uAddress, fullName]
+    );
+    if (insert.rowCount > 0) {
+      const title = "Login";
+      res.render("../views/pages/login.ejs", {
+        pageTitle: title,
+        login,
+        registerSucc: "Register Successfully",
+      });
+    } else {
+      res.status(500).send("Error, your data was not sent to the database");
+    }
+  } else {
+    const regError = "Your password does not match";
+    const data = {
+      fName: uFName,
+      lName: uLName,
+      email: uEmail,
+      pass: uPass,
+      repass: uRePass,
+      address: uAddress,
+    };
+    res.render("../views/pages/register.ejs", {
+      pageTitle: title,
+      regError,
+      data,
+    });
+  }
 });
 
 app.get("*", (req, res) => {

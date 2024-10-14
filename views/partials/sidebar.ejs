@@ -10,7 +10,7 @@
     <% if(locals.login) {%>
     <li class="list"><a href="">Logout</a></li>
     <% } else {%>
-      <% if(pageTitle !== 'Login' && pageTitle !== 'Register') { %>
+      <% if(pageTitle !== 'Login') { %>
       <li class="list login"><a class='login-btn' href="/login">Login</a></li>
       <% } %>
     <% } %>

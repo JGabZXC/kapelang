@@ -1,25 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/styles.css">
-    <title><%= pageTitle %></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+  <title><%= pageTitle %></title>
 </head>
+
 <body>
-    <div class="main__container">
-        <header>
-            <%- include('../partials/sidebar.ejs') %>
-        </header>
-    
-        <main>
-            <form action="/login/submit" method="post">
-                <input name="uEmail" id="uEmail" type="email" placeholder="Your Email" required>
-                <input name="uPass" id="uPass" type="password" placeholder="Your Password" required>
-                <input type="submit" value="Submit">
-            </form>
-        </main>
-    </div>
-    
+  <div class="main__container">
+    <header>
+      <%- include('../partials/sidebar.ejs') %>
+    </header>
+
+    <main>
+      <% if(locals.registerMess) { %>
+      <p style="color: white;"> <%= registerMess %></p>
+      <form action="/login/submit" method="post">
+        <input name="uEmail" id="uEmail" type="email" placeholder="Your Email" required>
+        <input name="uPass" id="uPass" type="password" placeholder="Your Password" required>
+        <input type="submit" value="Submit">
+      </form>
+      <% } else {%>
+      <form action="/login/submit" method="post">
+        <input name="uEmail" id="uEmail" type="email" placeholder="Your Email" required>
+        <input name="uPass" id="uPass" type="password" placeholder="Your Password" required>
+        <input type="submit" value="Submit">
+      </form>
+      <% } %>
+
+    </main>
+  </div>
+
 </body>
+
 </html>

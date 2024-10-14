@@ -5,3 +5,7 @@ CREATE TABLE users (
 );
 
 INSERT INTO users (email, password) VALUES ('jlopezgab18@gmail.com', 'testingpass')
+
+ALTER TABLE users
+ADD full_name VARCHAR(255),
+ADD address VARCHAR(255),
