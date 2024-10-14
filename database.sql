@@ -8,4 +8,6 @@ INSERT INTO users (email, password) VALUES ('jlopezgab18@gmail.com', 'testingpas
 
 ALTER TABLE users
 ADD full_name VARCHAR(255),
-ADD address VARCHAR(255),
+ADD address VARCHAR(255);
+
+ALTER TABLE users ADD is_admin boolean;

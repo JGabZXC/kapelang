@@ -8,7 +8,7 @@
     <li class="list"><a href="/menu">Menu</a></li>
     <li class="list"><a href="/cart">Order</a></li>
     <% if(locals.login) {%>
-    <li class="list"><a href="">Logout</a></li>
+    <li class="list"><a href="/logout">Logout</a></li>
     <% } else {%>
       <% if(pageTitle !== 'Login') { %>
       <li class="list login"><a class='login-btn' href="/login">Login</a></li>

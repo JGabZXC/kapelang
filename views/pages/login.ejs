@@ -15,8 +15,8 @@
     </header>
 
     <main>
-      <% if(locals.registerMess) { %>
-      <p style="color: white;"> <%= registerMess %></p>
+      <% if(locals.registerSucc) { %>
+      <p style="color: white;"> <%= registerSucc %></p>
       <form action="/login/submit" method="post">
         <input name="uEmail" id="uEmail" type="email" placeholder="Your Email" required>
         <input name="uPass" id="uPass" type="password" placeholder="Your Password" required>

@@ -3,6 +3,9 @@
 import express from "express";
 import bodyParser from "body-parser";
 import db from "./db.js";
+import bcrypt from "bcrypt";
+
+const saltRounds = 10; // Times to hash password
 
 const app = express();
 const port = 3000; // Change mo nalang sa ENV kung san ka komportable
@@ -14,7 +17,7 @@ app.use(express.static("public/css"));
 app.use(express.static("public/js"));
 app.use(express.static("public/img"));
 
-const login = false;
+let login = false;
 
 // Replace user first name and last name first letter to upper case
 const correctName = function (first, last) {
@@ -44,6 +47,11 @@ app.get("/cart", (req, res) => {
 
 app.get("/login", (req, res) => {
   const title = "Login";
+
+  if (login) {
+    return res.redirect("/");
+  }
+
   res
     .status(200)
     .render("../views/pages/login.ejs", { pageTitle: title, login });
@@ -52,14 +60,41 @@ app.get("/login", (req, res) => {
 // Submit Login
 app.post("/login/submit", async (req, res) => {
   const { uEmail, uPass } = req.body;
-  const result = await db.query("SELECT * FROM users");
-  res.status(200).send(uEmail);
+  const checkAcc = await db.query(
+    "SELECT email, password FROM users WHERE email = $1",
+    [uEmail]
+  );
+
+  if (checkAcc.rows.length === 0) {
+    res.send(`Email does not exist`);
+  } else {
+    const [{ email, password }] = checkAcc.rows;
+
+    const compare = await bcrypt.compare(uPass, password); // Comparing hashed password, returns true or false
+    if (compare) {
+      login = true;
+      res.redirect("/");
+    } else {
+      res.json({ message: "incorrect password" });
+    }
+  }
+});
+
+// Logout
+app.get("/logout", (req, res) => {
+  login = false;
+  res.redirect("/");
 });
 
 // app.use("/", router);
 
 app.get("/register", (req, res) => {
   const title = "Register";
+
+  if (login) {
+    return res.redirect("/"); // Need to use return to ensure it exits before redirecting to '/'
+  }
+
   res
     .status(200)
     .render("../views/pages/register.ejs", { pageTitle: title, login });
@@ -67,12 +102,12 @@ app.get("/register", (req, res) => {
 
 // Submit Register
 app.post("/register/submit", async (req, res) => {
+  const title = "Register";
   const { uEmail, uPass, uRePass, uAddress, uFName, uLName } = req.body;
   const checkEmail = await db.query(
     "SELECT email FROM users WHERE email = $1",
     [uEmail]
   );
-  const title = "Register";
 
   if (checkEmail.rows.length > 0) {
     const regError = "Email already exist!";
@@ -91,16 +126,18 @@ app.post("/register/submit", async (req, res) => {
     });
   } else if (uPass === uRePass) {
     const fullName = correctName(uFName, uLName);
+    const is_admin = false;
+    const hashedPassword = await bcrypt.hash(uPass, saltRounds); // This hashed password will be stored in database
     const insert = await db.query(
-      "INSERT INTO users (email, password, address, full_name) VALUES ($1, $2, $3, $4)",
-      [uEmail, uPass, uAddress, fullName]
+      "INSERT INTO users (email, password, address, full_name, is_admin) VALUES ($1, $2, $3, $4, $5)",
+      [uEmail, hashedPassword, uAddress, fullName, is_admin]
     );
     if (insert.rowCount > 0) {
       const title = "Login";
       res.render("../views/pages/login.ejs", {
         pageTitle: title,
         login,
-        registerSucc: "Register Successfully",
+        registerSucc: "Register Successfully. You can now sign in!",
       });
     } else {
       res.status(500).send("Error, your data was not sent to the database");
