@@ -7,10 +7,18 @@ import bcrypt from "bcrypt";
 import passport from "passport";
 import { Strategy } from "passport-local";
 import session from "express-session";
+import connectPgSimple from "connect-pg-simple";
 
 const app = express();
 const port = 3000; // Change mo nalang sa ENV kung san ka komportable
 const saltRounds = 10; // Times to hash password
+const pgSession = connectPgSimple(session);
+
+const store = new pgSession({
+  pool: db,
+  tableName: "user_session",
+  createTableIfMissing: true,
+});
 
 // Middlewares
 app.use(
@@ -18,6 +26,7 @@ app.use(
     secret: "SIGNEDCOOKIES",
     resave: false,
     saveUninitialized: false,
+    store: store,
   })
 );
 
@@ -47,7 +56,6 @@ const correctName = function (first, last) {
 };
 
 app.get("/", (req, res) => {
-  console.log(req.user);
   const title = "Kapelang";
   res.status(200).render("../views/index.ejs", { pageTitle: title });
 });
@@ -156,7 +164,10 @@ app.get("/logout", (req, res) => {
     if (err) {
       return next(err);
     }
-    res.redirect("/");
+    req.session.destroy((err) => {
+      if (err) next(err);
+      res.redirect("/");
+    });
   });
 });
 
