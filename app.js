@@ -4,20 +4,37 @@ import express from "express";
 import bodyParser from "body-parser";
 import db from "./db.js";
 import bcrypt from "bcrypt";
-
-const saltRounds = 10; // Times to hash password
+import passport from "passport";
+import { Strategy } from "passport-local";
+import session from "express-session";
 
 const app = express();
 const port = 3000; // Change mo nalang sa ENV kung san ka komportable
+const saltRounds = 10; // Times to hash password
 
 // Middlewares
+app.use(
+  session({
+    secret: "SIGNEDCOOKIES",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public/"));
+app.use(express.static("public"));
 app.use(express.static("public/css"));
 app.use(express.static("public/js"));
 app.use(express.static("public/img"));
 
-let login = false;
+app.use(passport.initialize());
+app.use(passport.session());
+
+// If user is logged in, show the logout button
+app.use((req, res, next) => {
+  res.locals.login = req.isAuthenticated();
+  next();
+});
 
 // Replace user first name and last name first letter to upper case
 const correctName = function (first, last) {
@@ -30,15 +47,14 @@ const correctName = function (first, last) {
 };
 
 app.get("/", (req, res) => {
+  console.log(req.user);
   const title = "Kapelang";
-  res.status(200).render("../views/index.ejs", { pageTitle: title, login });
+  res.status(200).render("../views/index.ejs", { pageTitle: title });
 });
 
 app.get("/menu", (req, res) => {
   const title = "Kapelang | Menu";
-  res
-    .status(200)
-    .render("../views/pages/menu.ejs", { pageTitle: title, login });
+  res.status(200).render("../views/pages/menu.ejs", { pageTitle: title });
 });
 
 app.get("/cart", (req, res) => {
@@ -48,56 +64,32 @@ app.get("/cart", (req, res) => {
 app.get("/login", (req, res) => {
   const title = "Login";
 
-  if (login) {
+  if (req.isAuthenticated()) {
     return res.redirect("/");
+  } else {
+    res.status(200).render("../views/pages/login.ejs", { pageTitle: title });
   }
-
-  res
-    .status(200)
-    .render("../views/pages/login.ejs", { pageTitle: title, login });
 });
 
 // Submit Login
-app.post("/login/submit", async (req, res) => {
-  const { uEmail, uPass } = req.body;
-  const checkAcc = await db.query(
-    "SELECT email, password FROM users WHERE email = $1",
-    [uEmail]
-  );
-
-  if (checkAcc.rows.length === 0) {
-    res.send(`Email does not exist`);
-  } else {
-    const [{ email, password }] = checkAcc.rows;
-
-    const compare = await bcrypt.compare(uPass, password); // Comparing hashed password, returns true or false
-    if (compare) {
-      login = true;
-      res.redirect("/");
-    } else {
-      res.json({ message: "incorrect password" });
-    }
-  }
-});
-
-// Logout
-app.get("/logout", (req, res) => {
-  login = false;
-  res.redirect("/");
-});
+app.post(
+  "/login/submit",
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+  })
+);
 
 // app.use("/", router);
 
 app.get("/register", (req, res) => {
   const title = "Register";
 
-  if (login) {
+  if (req.isAuthenticated()) {
     return res.redirect("/"); // Need to use return to ensure it exits before redirecting to '/'
+  } else {
+    res.status(200).render("../views/pages/register.ejs", { pageTitle: title });
   }
-
-  res
-    .status(200)
-    .render("../views/pages/register.ejs", { pageTitle: title, login });
 });
 
 // Submit Register
@@ -109,7 +101,7 @@ app.post("/register/submit", async (req, res) => {
     [uEmail]
   );
 
-  if (checkEmail.rows.length > 0) {
+  if (checkEmail.rowCount > 0) {
     const regError = "Email already exist!";
     const data = {
       fName: uFName,
@@ -136,7 +128,6 @@ app.post("/register/submit", async (req, res) => {
       const title = "Login";
       res.render("../views/pages/login.ejs", {
         pageTitle: title,
-        login,
         registerSucc: "Register Successfully. You can now sign in!",
       });
     } else {
@@ -160,8 +151,51 @@ app.post("/register/submit", async (req, res) => {
   }
 });
 
+app.get("/logout", (req, res) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
+  });
+});
+
 app.get("*", (req, res) => {
   res.status(400).send(`Error 404 <a href="/">Go back <a/>`);
+});
+
+passport.use(
+  new Strategy(async function verify(username, password, cb) {
+    try {
+      const checkAcc = await db.query("SELECT * FROM users WHERE email = $1", [
+        username,
+      ]);
+
+      if (checkAcc.rows.length === 0) {
+        return cb("Email not found!");
+      } else {
+        const user = checkAcc.rows[0];
+        const hashedPassword = user.password;
+
+        const compare = await bcrypt.compare(password, hashedPassword); // Comparing hashed password, returns true or false
+        if (compare) {
+          return cb(null, user);
+        } else {
+          return cb("Incorrect password!", false);
+        }
+      }
+    } catch (error) {
+      return cb(error);
+    }
+  })
+);
+
+passport.serializeUser((user, cb) => {
+  cb(null, user);
+});
+
+passport.deserializeUser((user, cb) => {
+  cb(null, user);
 });
 
 app.listen(port, () => {
