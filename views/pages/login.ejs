@@ -15,20 +15,28 @@
     </header>
 
     <main>
-      <% if(locals.registerSucc) { %>
-      <p style="color: white;"> <%= registerSucc %></p>
-      <form action="/login/submit" method="post">
-        <input name="username" id="uEmail" type="email" placeholder="Your Email" required>
-        <input name="password" id="uPass" type="password" placeholder="Your Password" required>
-        <input type="submit" value="Submit">
-      </form>
-      <% } else {%>
-      <form action="/login/submit" method="post">
-        <input name="username" id="uEmail" type="email" placeholder="Your Email" required>
-        <input name="password" id="uPass" type="password" placeholder="Your Password" required>
-        <input type="submit" value="Submit">
-      </form>
-      <% } %>
+      <section class="login-form">
+        <% if(locals.registerSucc) { %>
+        <p style="color: white;"> <%= registerSucc %></p>
+        <form action="/login/submit" method="post">
+          <input name="username" id="uEmail" type="email" placeholder="Your Email" required>
+          <input name="password" id="uPass" type="password" placeholder="Your Password" required>
+          <input type="submit" value="Submit">
+        </form>
+        <% } else {%>
+          <% if(locals.message) { %>
+            <p style="color: white;"><%= message %></p>
+          <% } %>
+        <form action="/login/submit" method="post">
+          <input name="username" id="uEmail" type="email" placeholder="Your Email" required>
+          <input name="password" id="uPass" type="password" placeholder="Your Password" required>
+          <input type="submit" value="Submit">
+        </form>
+        <% } %>
+        <div class="register">
+          <p style="color: white">Don't have an account yet? <a href="/register">Register here</a></p>
+        </div>
+      </section>
 
     </main>
   </div>

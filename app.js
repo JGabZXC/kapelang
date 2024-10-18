@@ -8,6 +8,7 @@ import passport from "passport";
 import { Strategy } from "passport-local";
 import session from "express-session";
 import connectPgSimple from "connect-pg-simple";
+import flash from "connect-flash";
 
 const app = express();
 const port = 3000; // Change mo nalang sa ENV kung san ka komportable
@@ -15,9 +16,10 @@ const saltRounds = 10; // Times to hash password
 const pgSession = connectPgSimple(session);
 
 const store = new pgSession({
-  pool: db,
-  tableName: "user_session",
-  createTableIfMissing: true,
+  pool: db, // Your DB
+  tableName: "user_session", // Table name for sessions
+  createTableIfMissing: true, // If table is missing it will automatically create one in db
+  pruneSessionInterval: 60, // Automatically delete expired sessions every 60 seconds
 });
 
 // Middlewares
@@ -26,7 +28,10 @@ app.use(
     secret: "SIGNEDCOOKIES",
     resave: false,
     saveUninitialized: false,
-    store: store,
+    store: store, // Store in DB
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
+    },
   })
 );
 
@@ -38,10 +43,12 @@ app.use(express.static("public/img"));
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 
 // If user is logged in, show the logout button
 app.use((req, res, next) => {
   res.locals.login = req.isAuthenticated();
+  res.locals.profile = req.user;
   next();
 });
 
@@ -60,13 +67,12 @@ app.get("/", (req, res) => {
   res.status(200).render("../views/index.ejs", { pageTitle: title });
 });
 
-app.get("/menu", (req, res) => {
+app.get("/menu", async (req, res) => {
   const title = "Kapelang | Menu";
-  res.status(200).render("../views/pages/menu.ejs", { pageTitle: title });
-});
-
-app.get("/cart", (req, res) => {
-  res.status(200).send("this is cart page");
+  const menu = await db.query("SELECT * FROM items ORDER BY id ASC");
+  const data = menu.rows;
+  console.log(data);
+  res.render("../views/pages/menu.ejs", { pageTitle: title, data });
 });
 
 app.get("/login", (req, res) => {
@@ -75,7 +81,10 @@ app.get("/login", (req, res) => {
   if (req.isAuthenticated()) {
     return res.redirect("/");
   } else {
-    res.status(200).render("../views/pages/login.ejs", { pageTitle: title });
+    res.status(200).render("../views/pages/login.ejs", {
+      pageTitle: title,
+      message: req.flash("error"),
+    });
   }
 });
 
@@ -85,6 +94,7 @@ app.post(
   passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/login",
+    failureFlash: true,
   })
 );
 
@@ -171,6 +181,25 @@ app.get("/logout", (req, res) => {
   });
 });
 
+// Routes for authenticated pages only
+
+app.get("/order", (req, res) => {
+  if (req.isAuthenticated()) {
+    return res.send("You have an access in this page");
+  } else {
+    return res.redirect("/login");
+  }
+});
+
+app.get("/profile", (req, res) => {
+  if (req.isAuthenticated()) {
+    return res.send("You have access in this page");
+  } else {
+    return res.redirect("/login");
+  }
+});
+
+// Handle any unrouted pages
 app.get("*", (req, res) => {
   res.status(400).send(`Error 404 <a href="/">Go back <a/>`);
 });
@@ -183,7 +212,7 @@ passport.use(
       ]);
 
       if (checkAcc.rows.length === 0) {
-        return cb("Email not found!");
+        return cb(null, false, { message: "Wrong Email." });
       } else {
         const user = checkAcc.rows[0];
         const hashedPassword = user.password;
@@ -192,7 +221,7 @@ passport.use(
         if (compare) {
           return cb(null, user);
         } else {
-          return cb("Incorrect password!", false);
+          return cb(null, false, { message: "Wrong Password." });
         }
       }
     } catch (error) {

@@ -4,10 +4,16 @@ CREATE TABLE users (
 	password VARCHAR(255)
 );
 
-INSERT INTO users (email, password) VALUES ('jlopezgab18@gmail.com', 'testingpass')
-
 ALTER TABLE users
 ADD full_name VARCHAR(255),
 ADD address VARCHAR(255);
 
 ALTER TABLE users ADD is_admin boolean;
+
+CREATE TABLE items (
+    id SERIAL PRIMARY KEY,
+    item_name VARCHAR(255),
+    price FLOAT,
+    type VARCHAR(255),
+    total_order INT
+)

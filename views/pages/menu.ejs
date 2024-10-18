@@ -1,21 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/styles.css">
-    <title><%= pageTitle %></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+  <title><%= pageTitle %></title>
 </head>
+
 <body>
-    <div class="main__container">
-        <header>
-            <%- include('../partials/sidebar.ejs') %>
-        </header>
-        <main>
-            <div class="container">
-                <h1>Menu page</h1>
-            </div>
-        </main>
-    </div>
+  <div class="main__container">
+    <header>
+      <%- include('../partials/sidebar.ejs') %>
+    </header>
+    <main>
+      <div class="container">
+        <h1>Menu page</h1>
+        <h2>Dish</h2>
+        <ul>
+          <% if(locals.data) { %>
+            <% for(const item of data) {%>
+              <% if(item.type === 'Dish') { %>
+                <li class="default"><%= item.item_name %> ₱<%= item.price %></li>
+              <% } %>
+            <% } %>
+          <% } %>
+        </ul>
+        <h2>Drinks</h2>
+        <ul>
+          <% if(locals.data) { %>
+            <% for(const item of data) {%>
+              <% if(item.type === 'Drinks') { %>
+                <li class="default"><%= item.item_name %> ₱<%= item.price %></li>
+              <% } %>
+            <% } %>
+          <% } %>
+        </ul>
+
+      </div>
+    </main>
+  </div>
 </body>
+
 </html>
