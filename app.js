@@ -36,6 +36,7 @@ app.use(
 );
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(express.static("public"));
 app.use(express.static("public/css"));
 app.use(express.static("public/js"));
@@ -48,7 +49,12 @@ app.use(flash());
 // If user is logged in, show the logout button
 app.use((req, res, next) => {
   res.locals.login = req.isAuthenticated();
-  res.locals.profile = req.user;
+  if (req.isAuthenticated()) {
+    res.locals.profile = req.user;
+    req.user = req.user;
+  } else {
+    req.user = null;
+  }
   next();
 });
 
@@ -64,15 +70,14 @@ const correctName = function (first, last) {
 
 app.get("/", (req, res) => {
   const title = "Kapelang";
-  res.status(200).render("../views/index.ejs", { pageTitle: title });
+  res.status(200).render("index.ejs", { pageTitle: title });
 });
 
 app.get("/menu", async (req, res) => {
   const title = "Kapelang | Menu";
   const menu = await db.query("SELECT * FROM items ORDER BY id ASC");
   const data = menu.rows;
-  console.log(data);
-  res.render("../views/pages/menu.ejs", { pageTitle: title, data });
+  res.render("pages/menu.ejs", { pageTitle: title, data });
 });
 
 app.get("/login", (req, res) => {
@@ -81,7 +86,7 @@ app.get("/login", (req, res) => {
   if (req.isAuthenticated()) {
     return res.redirect("/");
   } else {
-    res.status(200).render("../views/pages/login.ejs", {
+    res.status(200).render("pages/login.ejs", {
       pageTitle: title,
       message: req.flash("error"),
     });
@@ -106,7 +111,7 @@ app.get("/register", (req, res) => {
   if (req.isAuthenticated()) {
     return res.redirect("/"); // Need to use return to ensure it exits before redirecting to '/'
   } else {
-    res.status(200).render("../views/pages/register.ejs", { pageTitle: title });
+    res.status(200).render("pages/register.ejs", { pageTitle: title });
   }
 });
 
@@ -129,7 +134,7 @@ app.post("/register/submit", async (req, res) => {
       repass: uRePass,
       address: uAddress,
     };
-    res.render("../views/pages/register.ejs", {
+    res.render("pages/register.ejs", {
       pageTitle: title,
       regError,
       data,
@@ -144,7 +149,7 @@ app.post("/register/submit", async (req, res) => {
     );
     if (insert.rowCount > 0) {
       const title = "Login";
-      res.render("../views/pages/login.ejs", {
+      res.render("pages/login.ejs", {
         pageTitle: title,
         registerSucc: "Register Successfully. You can now sign in!",
       });
@@ -161,7 +166,7 @@ app.post("/register/submit", async (req, res) => {
       repass: uRePass,
       address: uAddress,
     };
-    res.render("../views/pages/register.ejs", {
+    res.render("pages/register.ejs", {
       pageTitle: title,
       regError,
       data,
@@ -183,12 +188,46 @@ app.get("/logout", (req, res) => {
 
 // Routes for authenticated pages only
 
-app.get("/order", (req, res) => {
+app.get("/order", async (req, res) => {
+  const title = "Kapelang | Order";
   if (req.isAuthenticated()) {
-    return res.send("You have an access in this page");
+    const result = await db.query("SELECT * FROM items");
+    const data = result.rows;
+    res.render("pages/order.ejs", { pageTitle: title, data, user: req.user });
   } else {
     return res.redirect("/login");
   }
+});
+
+app.post("/order/check", async (req, res) => {
+  const items = [];
+  const { user_id, order_by } = req.body;
+  items.push({
+    user_id,
+    order_by,
+  });
+  for (const key in req.body) {
+    const itemID = key.split("_")[2];
+    const itemName = req.body[key];
+    const quantityKey = `quantity_${itemName.replaceAll(" ", "_")}`;
+    const quantity = req.body[quantityKey];
+    const priceKey = `item_price_${itemID}`;
+    const price = req.body[priceKey];
+    const totalPriceKey = `total_price_${itemID}`;
+    const totalPrice = req.body[totalPriceKey];
+    if (quantity) {
+      items.push({
+        orders: {
+          item_name: itemName,
+          orderQuantity: quantity,
+          price: price,
+          totalPrice: totalPrice,
+        },
+      });
+    }
+  }
+  console.log(items);
+  res.json({ items });
 });
 
 app.get("/profile", (req, res) => {
