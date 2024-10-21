@@ -40,7 +40,7 @@
                       />
                       <span style="display: none;" id="total_<%= item.id %>">Total: ₱0</span>
                       
-                      <button type="button" onclick="toggleQuantity('quantity_<%= item.id %>', 'total_<%= item.id %>')">Add to cart</button></li>
+                      <button type="button" onclick="toggleQuantity('quantity_<%= item.id %>', 'total_<%= item.id %>', 'total_price_<%= item.id %>', '<%= item.price %>')">Add to cart</button></li>
                     
                     <% } %>
                 <% } %>
