@@ -25,7 +25,7 @@
             <ul>
               <% if(locals.data) { %>
                 <% for(const item of data) { %>
-                    <% if(item.type === 'Dish') { %>
+                  <% if(item.type === 'Dish') { %>
                     <li class="default">
                       <p><%= item.item_name %> ₱<%= item.price %></p>
                       <input type="hidden" name="item_name_<%= item.id %>" value="<%= item.item_name %>" />
@@ -40,7 +40,7 @@
                       />
                       <span style="display: none;" id="total_<%= item.id %>">Total: ₱0</span>
                       
-                      <button type="button" onclick="toggleQuantity('quantity_<%= item.id %>', 'total_<%= item.id %>')">Add to cart</button></li>
+                      <button type="button" onclick="toggleQuantity('quantity_<%= item.id %>', 'total_<%= item.id %>', 'total_price_<%= item.id %>', '<%= item.price %>')">Add to cart</button></li>
                     
                     <% } %>
                 <% } %>
@@ -48,26 +48,28 @@
             </ul>
             <h2>Drinks</h2>
             <ul>
-                <% if(locals.data) { %>
-                    <% for(const item of data) {%>
-                        <% if(item.type === 'Drinks') { %>
-                          <p><%= item.item_name %> ₱<%= item.price %></p>
-                          <input type="hidden" name="item_name_<%= item.id %>" value="<%= item.item_name %>" />
-                          <input type="hidden" name="item_price_<%= item.id %>" value="<%= item.price %>" />
-                          <input type="hidden" id="total_price_<%= item.id %>" name="total_price_<%= item.id %>" />
-                          <input 
-                            style="display: none" 
-                            type="number" 
-                            name="quantity_<%= item.item_name.replaceAll(' ', '_') %>" 
-                            id="quantity_<%= item.id %>" 
-                            oninput="updateTotal('quantity_<%= item.id %>', '<%= item.price %>', 'total_<%= item.id %>', 'total_price_<%= item.id %>')"
-                          />
-                          <span style="display: none;" id="total_<%= item.id %>">Total: ₱0</span>
-                          
-                          <button type="button" onclick="toggleQuantity('quantity_<%= item.id %>', 'total_<%= item.id %>')">Add to cart</button></li>
-                        <% } %>
+              <% if(locals.data) { %>
+                <% for(const item of data) { %>
+                  <% if(item.type === 'Drinks') { %>
+                    <li class="default">
+                      <p><%= item.item_name %> ₱<%= item.price %></p>
+                      <input type="hidden" name="item_name_<%= item.id %>" value="<%= item.item_name %>" />
+                      <input type="hidden" name="item_price_<%= item.id %>" value="<%= item.price %>" />
+                      <input type="hidden" id="total_price_<%= item.id %>" name="total_price_<%= item.id %>" />
+                      <input 
+                        style="display: none" 
+                        type="number" 
+                        name="quantity_<%= item.item_name.replaceAll(' ', '_') %>" 
+                        id="quantity_<%= item.id %>" 
+                        oninput="updateTotal('quantity_<%= item.id %>', '<%= item.price %>', 'total_<%= item.id %>', 'total_price_<%= item.id %>')"
+                      />
+                      <span style="display: none;" id="total_<%= item.id %>">Total: ₱0</span>
+                      
+                      <button type="button" onclick="toggleQuantity('quantity_<%= item.id %>', 'total_<%= item.id %>', 'total_price_<%= item.id %>', '<%= item.price %>')">Add to cart</button></li>
+                    
                     <% } %>
-                  <% } %>
+                <% } %>
+              <% } %>
             </ul>
 
             <button type="submit" onclick="this.disabled=true; this.form.submit();">Check Order</button>

@@ -206,6 +206,7 @@ app.post("/order/check", async (req, res) => {
     user_id,
     order_by,
   });
+  console.log(req.body);
   for (const key in req.body) {
     const itemID = key.split("_")[2];
     const itemName = req.body[key];
