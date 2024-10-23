@@ -244,10 +244,68 @@ app.post("/order/check", async (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
+  const title = "Profile";
   if (req.isAuthenticated()) {
-    return res.send("You have access in this page");
+    res.render("pages/profile.ejs", { pageTitle: title, user: req.user });
   } else {
     return res.redirect("/login");
+  }
+});
+
+app.post("/profile/change-password", async (req, res) => {
+  const title = "Profile";
+  if (req.isAuthenticated()) {
+    const { user_id, passwordOld, passwordNew, passwordReNew } = req.body;
+    const checkAcc = await db.query("SELECT * FROM users WHERE id = $1", [
+      user_id,
+    ]);
+    const user = checkAcc.rows[0];
+    const hashedPassword = user.password;
+    const compare = await bcrypt.compare(passwordOld, hashedPassword);
+    // If passwordOld is equal to db password
+    if (compare) {
+      // Check if passwordNew and passwordOld have value
+      if (passwordNew && passwordOld) {
+        // Compare password if they are same
+        if (passwordNew === passwordReNew) {
+          const hashedPassword = await bcrypt.hash(passwordNew, saltRounds);
+          const update = await db.query(
+            "UPDATE users SET password = $1 WHERE id = $2",
+            [hashedPassword, user_id]
+          );
+          // Success update
+          if (update.rowCount > 0) {
+            res.render("pages/profile.ejs", {
+              pageTitle: title,
+              user: req.user,
+              message: "Password change",
+            });
+          } else {
+            res.send("Db error");
+          }
+        } else {
+          res.render("pages/profile.ejs", {
+            pageTitle: title,
+            user: req.user,
+            message: "New password does not match",
+          });
+        }
+      } else {
+        res.render("pages/profile.ejs", {
+          pageTitle: title,
+          user: req.user,
+          message: "Please enter a new password",
+        });
+      }
+    } else {
+      res.render("pages/profile.ejs", {
+        pageTitle: title,
+        user: req.user,
+        message: "Wrong password",
+      });
+    }
+  } else {
+    return res.redirect("/profile");
   }
 });
 

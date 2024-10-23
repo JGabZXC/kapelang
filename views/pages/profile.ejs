@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title><%= pageTitle%></title>
+</head>
+<body>
+    <div class="main__container">
+        <header>
+          <%- include('../partials/sidebar.ejs') %>
+        </header>
+
+        <main>
+            <div class="container">
+                <section>
+                    <div class="defaul">
+                        <h2>Name: <%= user.full_name%></h2>
+                        <h2>Email: <%= user.email%></h2>
+                        <p><%= user.address%></p>
+                    </div>
+                    <div>
+                        <div id="password-form">
+                            <% if(locals.message) { %>
+                                <p><%= message %></p>
+                            <% } %>
+                            <form action="/profile/change-password" method="post">
+                                <input type="hidden" name="user_id" value="<%= user.id%>">
+                                <input name="passwordOld" type="password" placeholder="Your Current Password">
+                                <input name="passwordNew" type="password" placeholder="Your New Password">
+                                <input name="passwordReNew" type="password" placeholder="Retype Your New Password">
+                                <input type="submit" value="Submit">
+                            </form>
+                        </div>
+                        <button class="chnge_pw">Change your password</button>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+
+    </script>
+</body>
+</html>
