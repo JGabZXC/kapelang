@@ -119,6 +119,7 @@ app.get("/register", (req, res) => {
 app.post("/register/submit", async (req, res) => {
   const title = "Register";
   const { uEmail, uPass, uRePass, uAddress, uFName, uLName } = req.body;
+  console.log(req.body);
   const checkEmail = await db.query(
     "SELECT email FROM users WHERE email = $1",
     [uEmail]
