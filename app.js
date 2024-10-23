@@ -191,7 +191,7 @@ app.get("/logout", (req, res) => {
 app.get("/order", async (req, res) => {
   const title = "Kapelang | Order";
   if (req.isAuthenticated()) {
-    const result = await db.query("SELECT * FROM items");
+    const result = await db.query("SELECT * FROM items ORDER BY id ASC");
     const data = result.rows;
     res.render("pages/order.ejs", { pageTitle: title, data, user: req.user });
   } else {
@@ -215,12 +215,12 @@ app.post("/order/check", async (req, res) => {
     const price = req.body[priceKey];
     const totalPriceKey = `total_price_${itemID}`;
     const totalPrice = req.body[totalPriceKey];
-    if (quantity) {
+    if (quantity > 0) {
       const updateOrder = await db.query(
         "UPDATE items SET total_order = total_order + $1 WHERE item_name = $2",
         [quantity, itemName]
       );
-      if (updateOrder.rowCount > 1) {
+      if (updateOrder.rowCount > 0) {
         items.push({
           orders: {
             item_name: itemName,
@@ -234,8 +234,13 @@ app.post("/order/check", async (req, res) => {
       }
     }
   }
-  console.log(items);
-  res.json({ items });
+
+  // Check if items index 1 contains orders object
+  if (items[1]?.orders?.orderQuantity > 0) {
+    res.json({ items });
+  } else {
+    return res.redirect("/");
+  }
 });
 
 app.get("/profile", (req, res) => {

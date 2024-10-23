@@ -21,13 +21,15 @@ function toggleQuantity(id, totalId, totalPriceId, price) {
   quantityInput.value = 1;
   if (quantityInput.style.display === "block") {
     quantityInput.style.display = "none";
+    quantityInput.value = 0;
+    totalDisplay.style.display = "none";
   } else {
     quantityInput.style.display = "block";
-    quantityInput.value = 1;
-    const quantity = quantityInput.value || 0;
+    quantityInput.value = 1; // Preset to 1, so everytime add to cart was clicked it automatically set to 1
+    const quantity = quantityInput.value;
     const totalPrice = quantity * Number(price);
 
-    totalDisplay.style.display = quantity > 0 ? "inline" : "none";
+    totalDisplay.style.display = "inline";
     totalDisplay.textContent = `Total: ₱${totalPrice}`;
     totalPriceDisplay.value = `${totalPrice}`;
   }
