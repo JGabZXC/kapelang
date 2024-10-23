@@ -206,7 +206,6 @@ app.post("/order/check", async (req, res) => {
     user_id,
     order_by,
   });
-  console.log(req.body);
   for (const key in req.body) {
     const itemID = key.split("_")[2];
     const itemName = req.body[key];
@@ -217,14 +216,22 @@ app.post("/order/check", async (req, res) => {
     const totalPriceKey = `total_price_${itemID}`;
     const totalPrice = req.body[totalPriceKey];
     if (quantity) {
-      items.push({
-        orders: {
-          item_name: itemName,
-          orderQuantity: quantity,
-          price: price,
-          totalPrice: totalPrice,
-        },
-      });
+      const updateOrder = await db.query(
+        "UPDATE items SET total_order = total_order + $1 WHERE item_name = $2",
+        [quantity, itemName]
+      );
+      if (updateOrder.rowCount > 1) {
+        items.push({
+          orders: {
+            item_name: itemName,
+            orderQuantity: quantity,
+            price: price,
+            totalPrice: totalPrice,
+          },
+        });
+      } else {
+        res.send("Error!");
+      }
     }
   }
   console.log(items);
