@@ -264,6 +264,7 @@ app.post("/profile/change-password", async (req, res) => {
     const hashedPassword = user.password;
     const compare = await bcrypt.compare(passwordOld, hashedPassword);
     // If passwordOld is equal to db password
+    const passwordFormStyle = "block";
     if (compare) {
       // Check if passwordNew and passwordOld have value
       if (passwordNew && passwordOld) {
@@ -280,6 +281,7 @@ app.post("/profile/change-password", async (req, res) => {
               pageTitle: title,
               user: req.user,
               message: "Password change",
+              style: "none",
             });
           } else {
             res.send("Db error");
@@ -289,6 +291,7 @@ app.post("/profile/change-password", async (req, res) => {
             pageTitle: title,
             user: req.user,
             message: "New password does not match",
+            style: passwordFormStyle,
           });
         }
       } else {
@@ -296,6 +299,7 @@ app.post("/profile/change-password", async (req, res) => {
           pageTitle: title,
           user: req.user,
           message: "Please enter a new password",
+          style: passwordFormStyle,
         });
       }
     } else {
@@ -303,6 +307,7 @@ app.post("/profile/change-password", async (req, res) => {
         pageTitle: title,
         user: req.user,
         message: "Wrong password",
+        style: passwordFormStyle,
       });
     }
   } else {

@@ -1,63 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/styles.css">
-    <title><%= pageTitle%></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+  <title><%= pageTitle%></title>
 </head>
+
 <body>
-    <div class="main__container">
-        <header>
-          <%- include('../partials/sidebar.ejs') %>
-        </header>
+  <div class="main__container">
+    <header>
+      <%- include('../partials/sidebar.ejs') %>
+    </header>
 
-        <main>
-            <div class="container">
-                <section>
-                    <div class="defaul">
-                        <h2>Name: <%= user.full_name%></h2>
-                        <h2>Email: <%= user.email%></h2>
-                        <p><%= user.address%></p>
-                    </div>
-                    <div>
-                        <% if(locals.message) { %>
-                            <p><%= message %></p>
-                        <% } %>
-                        <div style="display: none;" id="password-form">
-                            <form action="/profile/change-password" method="post">
-                                <input type="hidden" name="user_id" value="<%= user.id%>">
-                                <input id="passwordOld" name="passwordOld" type="password" placeholder="Your Current Password">
-                                <input id="passwordNew" name="passwordNew" type="password" placeholder="Your New Password">
-                                <input id="passwordReNew" name="passwordReNew" type="password" placeholder="Retype Your New Password">
-                                <input type="submit" value="Submit">
-                            </form>
-                        </div>
-                        <button class="chnge_pw">Change your password</button>
-                    </div>
-                </section>
+    <main>
+      <div class="container">
+        <section>
+          <div class="defaul">
+            <h2>Name: <%= user.full_name%></h2>
+            <h2>Email: <%= user.email%></h2>
+            <p><%= user.address%></p>
+          </div>
+          <div>
+            <% if(locals.message) { %>
+            <p><%= message %></p>
+            <% } %>
+
+            <% if(locals.style) { %>
+            <div style="display: <%= style %>;" id="password-form">
+                <% console.log(style) %>
+              <form action="/profile/change-password" method="post">
+                <input type="hidden" name="user_id" value="<%= user.id%>">
+                <input id="passwordOld" name="passwordOld" type="password" placeholder="Your Current Password">
+                <input id="passwordNew" name="passwordNew" type="password" placeholder="Your New Password">
+                <input id="passwordReNew" name="passwordReNew" type="password" placeholder="Retype Your New Password">
+                <input type="submit" value="Submit">
+              </form>
             </div>
-        </main>
-    </div>
+            <% } else { %>
+            <div style="display: none;" id="password-form">
+              <form action="/profile/change-password" method="post">
+                <input type="hidden" name="user_id" value="<%= user.id%>">
+                <input id="passwordOld" name="passwordOld" type="password" placeholder="Your Current Password">
+                <input id="passwordNew" name="passwordNew" type="password" placeholder="Your New Password">
+                <input id="passwordReNew" name="passwordReNew" type="password" placeholder="Retype Your New Password">
+                <input type="submit" value="Submit">
+              </form>
+            </div>
+            <% } %>
 
-    <script>
-        const pwBtn = document.querySelector('.chnge_pw');
-        const pOld = document.querySelector('#passwordOld');
-        const pNew = document.querySelector('#passwordNew');
-        const pReNew = document.querySelector('#passwordReNew');
-        function showPasswordForm() {
-            const passwordForm = document.querySelector('#password-form');
-            if(passwordForm.style.display === 'none') {
-                passwordForm.style.display = 'block';
-            } else {
-                passwordForm.style.display = 'none';
-                pOld.value = '';
-                pNew.value = '';
-                pReNew.value = '';
-            }
-        }
 
-        pwBtn.addEventListener('click', showPasswordForm)
-    </script>
+            <button class="chnge_pw">Change your password</button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const pwBtn = document.querySelector('.chnge_pw');
+    const pOld = document.querySelector('#passwordOld');
+    const pNew = document.querySelector('#passwordNew');
+    const pReNew = document.querySelector('#passwordReNew');
+
+    function showPasswordForm() {
+      const passwordForm = document.querySelector('#password-form');
+      if (passwordForm.style.display === 'none') {
+        passwordForm.style.display = 'block';
+      } else {
+        passwordForm.style.display = 'none';
+        pOld.value = '';
+        pNew.value = '';
+        pReNew.value = '';
+      }
+    }
+
+    pwBtn.addEventListener('click', showPasswordForm)
+  </script>
 </body>
+
 </html>
