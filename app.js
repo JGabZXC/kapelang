@@ -99,6 +99,7 @@ app.get("/login", (req, res) => {
     res.status(200).render("pages/login.ejs", {
       pageTitle: title,
       message: req.flash("error"),
+      user: req.user,
     });
   }
 });
@@ -191,7 +192,7 @@ app.get("/logout", (req, res) => {
     }
     req.session.destroy((err) => {
       if (err) next(err);
-      res.redirect("/");
+      return res.render("index.ejs", { pageTitle: title, user: req.user });
     });
   });
 });
