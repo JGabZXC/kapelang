@@ -61,7 +61,6 @@ app.use((req, res, next) => {
 // If admin
 function isAdmin(req, res, next) {
   if (req.user && req.user.is_admin) {
-    console.log("admin access");
     return next();
   } else {
     return res.redirect("/");
@@ -330,7 +329,45 @@ app.get("/dashboard", isAdmin, (req, res) => {
   return res.send("welcome admin");
 });
 
-app.get("/menu-edit");
+app.get("/menu-edit", isAdmin, async (req, res) => {
+  const title = "Menu Dashboard";
+  const result = await db.query("SELECT * FROM items ORDER BY id ASC");
+  const data = result.rows;
+  return res.render("pages/menu-add.ejs", {
+    pageTitle: title,
+    data,
+    user: req.user,
+  });
+});
+
+app.get("/menu-edit/edit:id", isAdmin, async (req, res) => {
+  const title = "Edit Item";
+  const { id } = req.params;
+
+  const check = await db.query("SELECT * FROM items WHERE id = $1", [id]);
+  const data = check.rows[0];
+  return res.render("pages/menu-edit.ejs", {
+    pageTitle: title,
+    data,
+    user: req.user,
+  });
+});
+
+app.post("/menu-edit/edit:id", isAdmin, async (req, res) => {
+  const { id } = req.params;
+  const { updateItemName, updateItemPrice, updateItemType } = req.body;
+
+  const insert = await db.query(
+    "UPDATE items SET item_name = $1, price = $2, type = $3 WHERE id = $4 RETURNING *",
+    [updateItemName, updateItemPrice, updateItemType, id]
+  );
+
+  if (insert.rowCount > 0) {
+    res.redirect("/menu-edit");
+  } else {
+    res.redirect("/");
+  }
+});
 
 // Handle any unrouted pages
 app.get("*", (req, res) => {

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+  <title><%= pageTitle %></title>
+</head>
+
+<body>
+  <div class="main__container">
+    <header>
+      <%- include('../partials/sidebar.ejs') %>
+    </header>
+    <main>
+      <div class="container">
+        <h1>Menu Dashboard</h1>
+        <table>
+            <tr>
+                <th>id</th>
+                <th>name</th>
+                <th>price</th>
+                <th>type</th>
+                <th>total order</th>
+                <th>control</th>
+            </tr>
+            <% if(locals.data) { %>
+                <%for(const item of data) {%>
+                <tr>
+                    <td><%= item.id %></td>
+                    <td><%= item.item_name %></td>
+                    <td><%= item.price %></td>
+                    <td><%= item.type %></td>
+                    <td><%= item.total_order %></td>
+                    <td><a href="/menu-edit/edit<%= item.id %>">Edit</a> <a href="/menu-edit/delete?<%= item.id %>">Delete</a></td>
+                </tr>
+                <% } %>
+            <% } %>
+        </table>
+
+      </div>
+    </main>
+  </div>
+</body>
+
+</html>

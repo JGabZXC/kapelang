@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+  <title><%= pageTitle %></title>
+</head>
+
+<body>
+  <div class="main__container">
+    <header>
+      <%- include('../partials/sidebar.ejs') %>
+    </header>
+    <main>
+      <div class="container">
+        <h1>Menu Dashboard Edit</h1>
+            <form action="/menu-edit/edit<%= data.id %>" method="post">
+                <input type="hidden" name="item_id" value="<%= data.id %>">
+                <div>
+                    <label for="">Item Name</label>
+                    <input type="text" name="updateItemName" value="<%= data.item_name %>">
+                </div>
+                <div>
+                    <label for="">Item Price</label>
+                    <input type="text" name="updateItemPrice" value="<%= data.price %>">
+                </div>
+                <div>
+                    <label for="">Item Type</label>
+                    <input type="text" name="updateItemType" value="<%= data.type %>">
+                </div>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </main>
+  </div>
+</body>
+
+</html>
