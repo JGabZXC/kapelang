@@ -2,7 +2,11 @@
   <% if(locals.profile) { %>
   <div>
     <p>Signed in as:</p>
-    <p><strong><%= profile.full_name %></strong></p>
+    <% if(user.is_admin) { %>
+      <p><strong><%= profile.full_name %> (ADMIN)</strong></p>
+    <% } else { %>
+      <p><strong><%= profile.full_name %></strong></p>
+    <%}%>
   </div>
   <% } %>
 
@@ -11,17 +15,33 @@
   </div>
 
   <ul class="menu-list">
-    <li class="list"><a href="/">Home</a></li>
-    <li class="list"><a href="/menu">Menu</a></li>
-    <li class="list"><a href="/order">Order</a></li>
-    <% if(locals.login) {%>
-      <li class="list"><a href="/profile">Profile</a></li>
-    <li class="list login"><a class='login-btn' href="/logout">Logout</a></li>
-    <% } else {%>
-      <% if(pageTitle !== 'Login') { %>
-      <li class="list login"><a class='login-btn' href="/login">Login</a></li>
+    <% if(user.is_admin) { %>
+      <li class="list"><a href="/">Home</a></li>
+      <li class="list"><a href="/menu">Menu</a></li>
+      <li class="list"><a href="/menu-edit">Menu Add</a></li>
+      <li class="list"><a href="/dashboard">Dashboard</a></li>
+      <% if(locals.login) {%>
+        <li class="list"><a href="/profile">Profile</a></li>
+      <li class="list login"><a class='login-btn' href="/logout">Logout</a></li>
+      <% } else {%>
+        <% if(pageTitle !== 'Login') { %>
+        <li class="list login"><a class='login-btn' href="/login">Login</a></li>
+        <% } %>
+      <% } %>
+    <% } else { %>
+      <li class="list"><a href="/">Home</a></li>
+      <li class="list"><a href="/menu">Menu</a></li>
+      <li class="list"><a href="/order">Order</a></li>
+      <% if(locals.login) {%>
+        <li class="list"><a href="/profile">Profile</a></li>
+      <li class="list login"><a class='login-btn' href="/logout">Logout</a></li>
+      <% } else {%>
+        <% if(pageTitle !== 'Login') { %>
+        <li class="list login"><a class='login-btn' href="/login">Login</a></li>
+        <% } %>
       <% } %>
     <% } %>
+    
 
   </ul>
 </nav>

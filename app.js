@@ -58,6 +58,16 @@ app.use((req, res, next) => {
   next();
 });
 
+// If admin
+function isAdmin(req, res, next) {
+  if (req.user && req.user.is_admin) {
+    console.log("admin access");
+    return next();
+  } else {
+    return res.redirect("/");
+  }
+}
+
 // Replace user first name and last name first letter to upper case
 const correctName = function (first, last) {
   const fName = first.toLowerCase();
@@ -70,14 +80,14 @@ const correctName = function (first, last) {
 
 app.get("/", (req, res) => {
   const title = "Kapelang";
-  res.status(200).render("index.ejs", { pageTitle: title });
+  res.status(200).render("index.ejs", { pageTitle: title, user: req.user });
 });
 
 app.get("/menu", async (req, res) => {
   const title = "Kapelang | Menu";
   const menu = await db.query("SELECT * FROM items ORDER BY id ASC");
   const data = menu.rows;
-  res.render("pages/menu.ejs", { pageTitle: title, data });
+  res.render("pages/menu.ejs", { pageTitle: title, data, user: req.user });
 });
 
 app.get("/login", (req, res) => {
@@ -119,7 +129,6 @@ app.get("/register", (req, res) => {
 app.post("/register/submit", async (req, res) => {
   const title = "Register";
   const { uEmail, uPass, uRePass, uAddress, uFName, uLName } = req.body;
-  console.log(req.body);
   const checkEmail = await db.query(
     "SELECT email FROM users WHERE email = $1",
     [uEmail]
@@ -314,6 +323,13 @@ app.post("/profile/change-password", async (req, res) => {
     return res.redirect("/profile");
   }
 });
+
+// Routes for Admin
+app.get("/dashboard", isAdmin, (req, res) => {
+  return res.send("welcome admin");
+});
+
+app.get("/menu-edit");
 
 // Handle any unrouted pages
 app.get("*", (req, res) => {
