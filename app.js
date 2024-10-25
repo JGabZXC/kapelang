@@ -191,7 +191,7 @@ app.get("/logout", (req, res) => {
     }
     req.session.destroy((err) => {
       if (err) next(err);
-      return res.render("index.ejs", { pageTitle: title, user: req.user });
+      return res.redirect("/");
     });
   });
 });
@@ -374,7 +374,20 @@ app.post("/menu-edit/create", isAdmin, async (req, res) => {
   const { newItemName, newPrice, newType } = req.body;
   const result = await db.query("SELECT * FROM items ORDER BY id ASC");
   const data = result.rows;
-  if (newItemName && newPrice && newType) {
+
+  // Trim string
+  const trim = newItemName.trim();
+  // Check if input is empty
+  if (trim === "") {
+    return res.render("pages/menu-add.ejs", {
+      pageTitle: title,
+      data: data,
+      user: req.user,
+      message: "Not a valid name!",
+    });
+  }
+
+  if (newItemName.length > 2 && newPrice && newType.length > 2) {
     const add = await db.query(
       "INSERT INTO items (item_name, price, type, total_order) VALUES ($1, $2, $3, $4) RETURNING *;",
       [newItemName, Number(newPrice), newType, 0]
