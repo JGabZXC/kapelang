@@ -16,6 +16,17 @@
     <main>
       <div class="container">
         <h1>Menu Dashboard</h1>
+        <div>
+          <% if(locals.message) { %>
+            <p><%= message %></p>
+          <% } %>
+          <form action="/menu-edit/create" method="post">
+            <input type="text" name="newItemName" placeholder="Item Name">
+            <input type="text" name="newPrice" placeholder="Price">
+            <input type="text" name="newType" placeholder="Type">
+            <input type="submit" value="Submit">
+          </form>
+        </div>
         <table>
             <tr>
                 <th>id</th>
@@ -33,7 +44,7 @@
                     <td><%= item.price %></td>
                     <td><%= item.type %></td>
                     <td><%= item.total_order %></td>
-                    <td><a href="/menu-edit/edit<%= item.id %>">Edit</a> <a href="/menu-edit/delete?<%= item.id %>">Delete</a></td>
+                    <td><a href="/menu-edit/edit<%= item.id %>">Edit</a> <a href="/menu-edit/delete<%= item.id %>">Delete</a></td>
                 </tr>
                 <% } %>
             <% } %>

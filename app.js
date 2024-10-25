@@ -369,6 +369,51 @@ app.post("/menu-edit/edit:id", isAdmin, async (req, res) => {
   }
 });
 
+app.post("/menu-edit/create", isAdmin, async (req, res) => {
+  const title = "Menu Dashboard";
+  const { newItemName, newPrice, newType } = req.body;
+  const result = await db.query("SELECT * FROM items ORDER BY id ASC");
+  const data = result.rows;
+  if (newItemName && newPrice && newType) {
+    const add = await db.query(
+      "INSERT INTO items (item_name, price, type, total_order) VALUES ($1, $2, $3, $4) RETURNING *;",
+      [newItemName, Number(newPrice), newType, 0]
+    );
+
+    if (add.rowCount > 0) {
+      const result = await db.query("SELECT * FROM items ORDER BY id ASC");
+      const data = result.rows;
+      return res.render("pages/menu-add.ejs", {
+        pageTitle: title,
+        data: data,
+        user: req.user,
+        message: "Item added",
+      });
+    } else {
+      res.send("Error on DB");
+    }
+  } else {
+    return res.render("pages/menu-add.ejs", {
+      pageTitle: title,
+      data,
+      user: req.user,
+      message: "Fill up the requirements",
+    });
+  }
+});
+
+app.get("/menu-edit/delete:id", isAdmin, async (req, res) => {
+  const { id } = req.params;
+
+  const del = await db.query("DELETE FROM items WHERE id = $1", [id]);
+  if (del.rowCount > 0) {
+    res.redirect("/menu-edit");
+  } else {
+    console.log("error");
+    res.redirect("/");
+  }
+});
+
 // Handle any unrouted pages
 app.get("*", (req, res) => {
   res.status(400).send(`Error 404 <a href="/">Go back <a/>`);
