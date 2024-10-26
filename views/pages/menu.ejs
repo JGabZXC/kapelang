@@ -5,37 +5,46 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/tables.css">
   <title><%= pageTitle %></title>
 </head>
 
 <body>
   <div class="main__container">
+    <div class="hamburger">
+      <div class="bars"></div>
+      <div class="bars"></div>
+      <div class="bars"></div>
+  </div>
     <header>
       <%- include('../partials/sidebar.ejs') %>
     </header>
     <main>
       <div class="container">
         <h1>Menu page</h1>
-        <h2>Dish</h2>
-        <ul>
+        <table class="menu-display">
+          <tr>
+            <th>Food</th>
+            <th>Price</th>
+            <th>Type</th>
+          </tr>
           <% if(locals.data) { %>
-            <% for(const item of data) {%>
-              <% if(item.type === 'Dish') { %>
-                <li class="default"><%= item.item_name %> ₱<%= item.price %></li>
-              <% } %>
-            <% } %>
-          <% } %>
-        </ul>
-        <h2>Drinks</h2>
-        <ul>
-          <% if(locals.data) { %>
-            <% for(const item of data) {%>
-              <% if(item.type === 'Drinks') { %>
-                <li class="default"><%= item.item_name %> ₱<%= item.price %></li>
-              <% } %>
-            <% } %>
-          <% } %>
-        </ul>
+            <% data.forEach(function(item) { %>
+            <tr>
+                <td><%= item.item_name %></td>
+                <td>₱<%= item.price %></td>
+                <td><%= item.type %></td>
+            </tr>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td>No data</td>
+              <td>No data</td>
+              <td>No data</td>
+            </tr>
+          <% }%>
+        </table>
+        
 
       </div>
     </main>

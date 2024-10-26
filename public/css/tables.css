@@ -1,0 +1,69 @@
+:root {
+    --main-color: #E4E0E1;
+
+    --bg-color: #493628;
+
+    --accent: #AB886D;
+    --accent-2: #803D3B; 
+
+    --ff-main: "Noto Serif", serif;
+    --ff-secondary: "Montserrat", sans-serif;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.menu-display {
+    font-size: 1.25rem;
+}
+
+.menu-display th {
+    width: 6rem;
+    text-align: left;
+}
+
+.menu-display th:nth-child(1) {
+    width: 20rem;
+}
+
+.row-action {
+    width: 35rem !important;
+}
+
+.menu-display .action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.table-item {
+    padding-top: 10px;
+}
+
+input {
+    font-size: 1.25rem;
+    border-radius: 6rem;
+    width: 10rem;   
+    padding: 5px;
+    border: none;
+    text-align: center;
+    font-family: var(--ff-secondary);
+}
+
+button {
+    font-family: var(--ff-secondary);
+    font-size: 1.25rem;
+    padding: 10px 20px;
+    border-radius: 6rem;
+    outline: none;
+    border: none;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: orange;
+}

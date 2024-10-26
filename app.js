@@ -84,7 +84,7 @@ app.get("/", (req, res) => {
 
 app.get("/menu", async (req, res) => {
   const title = "Kapelang | Menu";
-  const menu = await db.query("SELECT * FROM items ORDER BY id ASC");
+  const menu = await db.query("SELECT * FROM items ORDER BY type ASC, id ASC");
   const data = menu.rows;
   res.render("pages/menu.ejs", { pageTitle: title, data, user: req.user });
 });
