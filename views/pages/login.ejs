@@ -10,13 +10,11 @@
 
 <body>
   <div class="main__container">
-    <div class="abs__con">
       <div class="hamburger">
         <div class="bars"></div>
         <div class="bars"></div>
         <div class="bars"></div>
         </div>
-    </div>
     <header>
       <%- include('../partials/sidebar.ejs') %>
     </header>
@@ -26,7 +24,7 @@
         <section class="login-form">
           <h2 class="default-topo">Login</h2>
           <% if(locals.registerSucc) { %>
-          <p class="default-topo"><%= registerSucc %></p>
+          <p class="default-topo breaker"><%= registerSucc %></p>
           <form class="breaker" action="/login/submit" method="post">
             <input name="username" id="uEmail" type="email" placeholder="Your Email" required>
             <input name="password" id="uPass" type="password" placeholder="Your Password" required>
@@ -34,7 +32,7 @@
           </form>
           <% } else {%>
             <% if(locals.message) { %>
-              <p class="default-topo"><%= message %></p>
+              <p class="default-topo breaker"><%= message %></p>
             <% } %>
           <form class="breaker" action="/login/submit" method="post">
             <input name="username" id="uEmail" type="email" placeholder="Your Email" required>

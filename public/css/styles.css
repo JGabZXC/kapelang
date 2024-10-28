@@ -262,11 +262,16 @@ form.breaker {
     text-align: center;
 }
 
+.login-form,
+.register-form {
+    width: 50%;
+}
+
 .login-form input,
 .register-form input {
-    min-width: 100%;
+    width: 100%;
     background: none;
-    border: 1px solid orange;
+    border: 1px solid var(--accent-2);
     border-radius: 5rem;
     padding: 10px;
     margin: 0 auto;
@@ -277,7 +282,15 @@ form.breaker {
 
 .login-form input[type="submit"],
 .register-form input[type="submit"]  {
-    background-color: orange;
+    background-color: var(--accent-2);
+}
+
+.register {
+    text-align: center;
+}
+
+.register a {
+    color: var(--accent-2);
 }
 
 @media (width <=700px) {

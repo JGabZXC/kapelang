@@ -20,11 +20,11 @@
     </header>
 
     <main>
-      <div class="container register__section">
-        <section class="register-form">
+      <div class="container login__section">
+        <section class="login-form">
           <h2 class="default-topo">Register</h2>
           <% if(locals.regError) { %>
-          <p style="color: white"><%= regError %></p>
+          <p class="breaker"><%= regError %></p>
           <form class="breaker" action="/register/submit" method="post">
             <input name="uFName" id="uFName" type="text" placeholder=" Your First Name" value="<%= data.fName %>"required>
             <input name="uLName" id="uLName" type="text" placeholder=" Your Last Name" value="<%= data.lName %>" required>
