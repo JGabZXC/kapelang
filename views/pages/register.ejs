@@ -31,7 +31,10 @@
             <input name="uEmail" id="uEmail" type="email" placeholder="Your Email" value="<%= data.email %>" required>
             <input name="uPass" id="uPass" type="password" placeholder="Your Password" required>
             <input name="uRePass" id="uRePass" type="password" placeholder="Retype Your Password" required>
-            <input name="uAddress" id="uAddress" type="text" placeholder="Your Address" value="<%= data.address %>" required>
+            <div>
+              <p class="default-topo label__address">Address</p>
+              <textarea name="uAddress" id="uAddress"></textarea>
+            </div>
             <input type="submit" id="subBtn" value="Submit">
           </form>
           <% } else { %>
@@ -41,7 +44,10 @@
             <input name="uEmail" id="uEmail" type="email" placeholder="Your Email" required>
             <input name="uPass" id="uPass" type="password" placeholder="Your Password" required>
             <input name="uRePass" id="uRePass" type="password" placeholder="Retype Your Password" required>
-            <input name="uAddress" id="uAddress" type="text" placeholder="Your Address" required>
+            <div>
+              <p class="default-topo label__address">Address</p>
+              <textarea name="uAddress" id="uAddress"></textarea>
+            </div>
             <input type="submit" id="subBtn" value="Submit">
           </form>
           <% } %>
