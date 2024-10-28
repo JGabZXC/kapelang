@@ -72,6 +72,38 @@
             <% } %>
         </table>
 
+        <table class="menu-display">
+          <tr>
+            <th>Name</th>
+            <th>Price</th>
+          </tr>
+          <% if(locals.data) { %>
+            <h2 class="default-topo breaker">Others</h2>
+            <!-- FILTER DATA -->
+            <% const filterOthers = data.filter((item) => item.type !== 'Drinks' && item.type !== 'Dish');%>
+            <% if(filterOthers.length > 0) { %>
+              <% filterOthers.forEach(function(item) { %>
+                <tr>
+                  <td><%= item.item_name %></td>
+                  <td>₱<%= item.price %></td>
+                </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td>No item</td>
+                <td>No Item</td>
+              </tr>
+            <% } %>
+          <% } else { %>
+            <h2 class="default-topo breaker">No Data</h2>
+            <tr>
+              <td>No data</td>
+              <td>No data</td>
+              <td>No data</td>
+            </tr>
+          <% } %>
+        </table>
+
       </div>
     </main>
   </div>

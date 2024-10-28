@@ -7,7 +7,7 @@
     --bg-color: #493628;
 
     --accent: #AB886D;
-    --accent-2: #803D3B; 
+    --accent-2: #803D3B;
 
     --ff-main: "Noto Serif", serif;
     --ff-secondary: "Montserrat", sans-serif;
@@ -16,7 +16,13 @@
 /* ------------- GLOBAL CONFIGUATION ------------- */
 
 h1,
-h2,h3,h4,h5,h6,p,table {
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+table {
     color: var(--main-color);
 }
 
@@ -71,7 +77,7 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    
+
     background-color: var(--bg-color);
     color: var(--main-color);
 }
@@ -264,7 +270,7 @@ form.breaker {
 
 .login-form,
 .register-form {
-    width: 50%;
+    width: 60%;
 }
 
 .login-form input,
@@ -281,7 +287,7 @@ form.breaker {
 }
 
 .login-form input[type="submit"],
-.register-form input[type="submit"]  {
+.register-form input[type="submit"] {
     background-color: var(--accent-2);
 }
 
@@ -293,7 +299,7 @@ form.breaker {
     color: var(--accent-2);
 }
 
-@media (width <=700px) {
+@media (width <=780px) {
 
     /* ------------- GLOBAL CONFIGUATION ------------- */
     .container {
@@ -344,6 +350,11 @@ form.breaker {
     /* ------------- LOGIN-REGISTER FORM ------------- */
     .login-form p {
         font-size: 1rem;
+    }
+
+    .login-form,
+    .register-form {
+        width: 90%;
     }
 
     .login-form input,
