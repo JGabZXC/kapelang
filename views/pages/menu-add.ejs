@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/tables.css">
   <title><%= pageTitle %></title>
 </head>
 
@@ -22,21 +23,21 @@
     <main>
       <div class="container">
         <h1>Menu Dashboard</h1>
-        <div>
+        <div class="breaker">
           <% if(locals.message) { %>
             <p><%= message %></p>
           <% } %>
-          <form action="/menu-edit/create" method="post">
+          <form class="breaker dashboard" action="/menu-edit/create" method="post">
             <input type="text" name="newItemName" placeholder="Item Name">
             <input type="text" name="newPrice" placeholder="Price">
             <input type="text" name="newType" placeholder="Type">
             <input type="submit" value="Submit">
           </form>
         </div>
-        <table>
+        <table class="menu-display menu-dashboard breaker">
             <tr>
                 <th>id</th>
-                <th>name</th>
+                <th class="name">name</th>
                 <th>price</th>
                 <th>type</th>
                 <th>total order</th>
@@ -55,6 +56,48 @@
                 <% } %>
             <% } %>
         </table>
+
+        <div class="breaker sort__container">
+          <!-- 1. RECODE THIS CODE TO GET ALL TYPES -->
+          <%
+            const filterType = data.map((item) => item.type)
+            const typeSet = new Set(filterType);
+            const types = [...typeSet];
+          %>
+          <h2 class="default-topo">Sort Type</h2>
+          <form class="sort__form__container" action="/menu-edit/sort" method="POST">
+            <div class="type__con breaker">
+              <label for="type">Type: </label>
+              <select name="type" id="type">
+                <%types.forEach(type => { %>
+                  <option value="<%= type %>"><a href="/menu-edit/?type<%= type %>"><%=type %></a> </option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="sortID__con breaker">
+              <label for="sort">Sort id by: </label>
+              <select name="sort" id="sort">
+                <option value="ASC">Ascending</option>
+                <option value="DESC">Descending</option>
+              </select>
+            </div>
+
+            <div class="sortOnly__con breaker">
+              <label for="only">Only: </label>
+                <select name="only" id="only">
+                  <option value="">ALL</option>
+                  <%types.forEach(type => { %>
+                    <option value="<%= type %>"><a href="/menu-edit/?type<%= type %>"><%=type %></a> </option>
+                    
+                  <% }) %>
+                </select>
+            </div>
+
+            <div class="submit__btn breaker"><input type="submit" value="Submit"></div>
+
+          </form>
+        </div>
 
       </div>
     </main>

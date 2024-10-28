@@ -16,6 +16,11 @@
     box-sizing: border-box;
 }
 
+input[type="submit"] {
+    background-color: var(--accent-2);
+    color: var(--main-color);
+}
+
 .menu-display {
     font-size: 1.25rem;
 }
@@ -70,4 +75,36 @@ button {
 
 button:hover {
     background-color: orange;
+}
+
+/* ------------- MENU DASHBOARD ------------- */
+
+.menu-dashboard {
+    border-spacing: 0;
+}
+
+.menu-dashboard th {
+    width: 10rem;
+}
+
+.menu-dashboard th:nth-child(1) {
+    width: 3rem;
+}
+
+.menu-dashboard .name {
+    width: 30rem;
+}
+
+.menu-dashboard tr:nth-child(even) {
+    background-color: var(--bg-color);
+}
+
+.sort__form__container {
+    display: flex;
+    flex-direction: column;
+    color: var(--main-color);
+}
+
+.dashboard {
+    flex-direction: row !important;
 }

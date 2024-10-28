@@ -369,10 +369,31 @@ app.post("/menu-edit/edit:id", isAdmin, async (req, res) => {
   }
 });
 
+app.post("/menu-edit/sort", isAdmin, async (req, res) => {
+  const { type, sort, only } = req.body;
+  const title = "Menu Dashboard";
+  console.log(`${only ? `WHERE type = $1` : ""}`);
+  const sortByType = await db.query(
+    `SELECT * FROM items ${
+      only ? `WHERE type = $2` : ""
+    } ORDER BY type = $1 DESC, id ${sort}`,
+    only ? [type, only] : [type]
+  );
+
+  const data = sortByType.rows;
+
+  return res.render("pages/menu-add.ejs", {
+    pageTitle: title,
+    data,
+    user: req.user,
+    message: `Item sorted by ${type} and id ${sort}`,
+  });
+});
+
 app.post("/menu-edit/create", isAdmin, async (req, res) => {
   const title = "Menu Dashboard";
   const { newItemName, newPrice, newType } = req.body;
-  const result = await db.query("SELECT * FROM items ORDER BY id ASC");
+  const result = await db.query("SELECT * FROM items ORDER BY id DESC");
   const data = result.rows;
 
   // Trim string
