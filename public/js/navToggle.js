@@ -6,6 +6,12 @@ hamburger.addEventListener("click", () => {
   console.log("click");
   header.classList.toggle("active");
   hamburger.classList.toggle("active");
+
+  if (hamburger.classList.contains("active")) {
+    document.body.style.position = "fixed";
+  } else {
+    document.body.style.position = "static";
+  }
 });
 
 const menuEl = document.querySelectorAll(".list");

@@ -10,39 +10,43 @@
 
 <body>
   <div class="main__container">
-    <div class="hamburger">
-      <div class="bars"></div>
-      <div class="bars"></div>
-      <div class="bars"></div>
-  </div>
-  
+    <div class="abs__con">
+      <div class="hamburger">
+        <div class="bars"></div>
+        <div class="bars"></div>
+        <div class="bars"></div>
+        </div>
+    </div>
     <header>
       <%- include('../partials/sidebar.ejs') %>
     </header>
 
     <main>
-      <section class="login-form">
-        <% if(locals.registerSucc) { %>
-        <p style="color: white;"> <%= registerSucc %></p>
-        <form action="/login/submit" method="post">
-          <input name="username" id="uEmail" type="email" placeholder="Your Email" required>
-          <input name="password" id="uPass" type="password" placeholder="Your Password" required>
-          <input type="submit" value="Submit">
-        </form>
-        <% } else {%>
-          <% if(locals.message) { %>
-            <p style="color: white;"><%= message %></p>
+      <div class="container login__section">
+        <section class="login-form">
+          <h2 class="default-topo">Login</h2>
+          <% if(locals.registerSucc) { %>
+          <p class="default-topo"><%= registerSucc %></p>
+          <form class="breaker" action="/login/submit" method="post">
+            <input name="username" id="uEmail" type="email" placeholder="Your Email" required>
+            <input name="password" id="uPass" type="password" placeholder="Your Password" required>
+            <input type="submit" value="Submit">
+          </form>
+          <% } else {%>
+            <% if(locals.message) { %>
+              <p class="default-topo"><%= message %></p>
+            <% } %>
+          <form class="breaker" action="/login/submit" method="post">
+            <input name="username" id="uEmail" type="email" placeholder="Your Email" required>
+            <input name="password" id="uPass" type="password" placeholder="Your Password" required>
+            <input type="submit" value="Submit">
+          </form>
           <% } %>
-        <form action="/login/submit" method="post">
-          <input name="username" id="uEmail" type="email" placeholder="Your Email" required>
-          <input name="password" id="uPass" type="password" placeholder="Your Password" required>
-          <input type="submit" value="Submit">
-        </form>
-        <% } %>
-        <div class="register">
-          <p style="color: white">Don't have an account yet? <a href="/register">Register here</a></p>
-        </div>
-      </section>
+          <div class="register breaker">
+            <p class="default-topo breaker">Don't have an account yet? <a href="/register">Register here</a></p>
+          </div>
+        </section>
+      </div>
 
     </main>
   </div>

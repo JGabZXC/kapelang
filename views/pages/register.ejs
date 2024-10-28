@@ -11,38 +11,42 @@
 <body>
   <div class="main__container">
     <div class="hamburger">
-      <div class="bars"></div>
-      <div class="bars"></div>
-      <div class="bars"></div>
-  </div>
+        <div class="bars"></div>
+        <div class="bars"></div>
+        <div class="bars"></div>
+    </div>
     <header>
       <%- include('../partials/sidebar.ejs') %>
     </header>
 
     <main>
-      <% if(locals.regError) { %>
-      <p style="color: white"><%= regError %></p>
-      <form action="/register/submit" method="post">
-        <input name="uFName" id="uFName" type="text" placeholder=" Your First Name" value="<%= data.fName %>"required>
-        <input name="uLName" id="uLName" type="text" placeholder=" Your Last Name" value="<%= data.lName %>" required>
-        <input name="uEmail" id="uEmail" type="email" placeholder="Your Email" value="<%= data.email %>" required>
-        <input name="uPass" id="uPass" type="password" placeholder="Your Password" required>
-        <input name="uRePass" id="uRePass" type="password" placeholder="Retype Your Password" required>
-        <input name="uAddress" id="uAddress" type="text" placeholder="Your Address" value="<%= data.address %>" required>
-        <input type="submit" id="subBtn" value="Submit">
-      </form>
-      <% } else { %>
-      <form action="/register/submit" method="post">
-        <input name="uFName" id="uFName" type="text" placeholder=" Your First Name" required>
-        <input name="uLName" id="uLName" type="text" placeholder=" Your Last Name" required>
-        <input name="uEmail" id="uEmail" type="email" placeholder="Your Email" required>
-        <input name="uPass" id="uPass" type="password" placeholder="Your Password" required>
-        <input name="uRePass" id="uRePass" type="password" placeholder="Retype Your Password" required>
-        <input name="uAddress" id="uAddress" type="text" placeholder="Your Address" required>
-        <input type="submit" id="subBtn" value="Submit">
-      </form>
-      <% } %>
-
+      <div class="container register__section">
+        <section class="register-form">
+          <h2 class="default-topo">Register</h2>
+          <% if(locals.regError) { %>
+          <p style="color: white"><%= regError %></p>
+          <form class="breaker" action="/register/submit" method="post">
+            <input name="uFName" id="uFName" type="text" placeholder=" Your First Name" value="<%= data.fName %>"required>
+            <input name="uLName" id="uLName" type="text" placeholder=" Your Last Name" value="<%= data.lName %>" required>
+            <input name="uEmail" id="uEmail" type="email" placeholder="Your Email" value="<%= data.email %>" required>
+            <input name="uPass" id="uPass" type="password" placeholder="Your Password" required>
+            <input name="uRePass" id="uRePass" type="password" placeholder="Retype Your Password" required>
+            <input name="uAddress" id="uAddress" type="text" placeholder="Your Address" value="<%= data.address %>" required>
+            <input type="submit" id="subBtn" value="Submit">
+          </form>
+          <% } else { %>
+          <form class="breaker" action="/register/submit" method="post">
+            <input name="uFName" id="uFName" type="text" placeholder=" Your First Name" required>
+            <input name="uLName" id="uLName" type="text" placeholder=" Your Last Name" required>
+            <input name="uEmail" id="uEmail" type="email" placeholder="Your Email" required>
+            <input name="uPass" id="uPass" type="password" placeholder="Your Password" required>
+            <input name="uRePass" id="uRePass" type="password" placeholder="Retype Your Password" required>
+            <input name="uAddress" id="uAddress" type="text" placeholder="Your Address" required>
+            <input type="submit" id="subBtn" value="Submit">
+          </form>
+          <% } %>
+        </section>
+      </div>
     </main>
   </div>
 </body>

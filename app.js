@@ -445,7 +445,7 @@ passport.use(
         const user = checkAcc.rows[0];
         const hashedPassword = user.password;
 
-        const compare = await bcrypt.compare(password, hashedPassword); // Comparing hashed password, returns true or false
+        const compare = await bcrypt.compare(password, hashedPassword); // Comparing hashed password, return true or false
         if (compare) {
           return cb(null, user);
         } else {

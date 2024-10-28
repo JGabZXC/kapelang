@@ -20,6 +20,10 @@
     font-size: 1.25rem;
 }
 
+th {
+    opacity: .75;
+}
+
 .menu-display th {
     width: 6rem;
     text-align: left;
