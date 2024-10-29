@@ -333,9 +333,16 @@ app.get("/menu-edit", isAdmin, async (req, res) => {
   const title = "Menu Dashboard";
   const result = await db.query("SELECT * FROM items ORDER BY id ASC");
   const data = result.rows;
+
+  const resultDB = await db.query(`SELECT * FROM items`);
+  const typesDB = resultDB.rows.map((type) => type.type);
+  const typesSet = new Set(typesDB);
+  const typesFDB = [...typesSet];
+
   return res.render("pages/menu-add.ejs", {
     pageTitle: title,
     data,
+    typesFDB,
     user: req.user,
   });
 });
@@ -369,10 +376,10 @@ app.post("/menu-edit/edit:id", isAdmin, async (req, res) => {
   }
 });
 
+// Sorting
 app.post("/menu-edit/sort", isAdmin, async (req, res) => {
   const { type, sort, only } = req.body;
   const title = "Menu Dashboard";
-  console.log(`${only ? `WHERE type = $1` : ""}`);
   const sortByType = await db.query(
     `SELECT * FROM items ${
       only ? `WHERE type = $2` : ""
@@ -382,9 +389,15 @@ app.post("/menu-edit/sort", isAdmin, async (req, res) => {
 
   const data = sortByType.rows;
 
+  const result = await db.query(`SELECT * FROM items`);
+  const typesDB = result.rows.map((type) => type.type);
+  const typesSet = new Set(typesDB);
+  const typesFDB = [...typesSet];
+
   return res.render("pages/menu-add.ejs", {
     pageTitle: title,
     data,
+    typesFDB,
     user: req.user,
     message: `Item sorted by ${type} and id ${sort}`,
   });

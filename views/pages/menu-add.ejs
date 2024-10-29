@@ -58,7 +58,6 @@
         </table>
 
         <div class="breaker sort__container">
-          <!-- 1. RECODE THIS CODE TO GET ALL TYPES -->
           <%
             const filterType = data.map((item) => item.type)
             const typeSet = new Set(filterType);
@@ -84,15 +83,23 @@
             </div>
 
             <div class="sortOnly__con breaker">
+            <% if(locals.typesFDB) { %>
               <label for="only">Only: </label>
                 <select name="only" id="only">
                   <option value="">ALL</option>
-                  <%types.forEach(type => { %>
+                  <% typesFDB.forEach(type => { %>
                     <option value="<%= type %>"><a href="/menu-edit/?type<%= type %>"><%=type %></a> </option>
                     
                   <% }) %>
                 </select>
-            </div>
+            <% } else { %>
+              <label for="only">Only: </label>
+                <select name="only" id="only">
+                  <option value="">ALL</option>
+                </select>
+            <% } %>
+          </div>
+              
 
             <div class="submit__btn breaker"><input type="submit" value="Submit"></div>
 
