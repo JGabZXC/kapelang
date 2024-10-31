@@ -248,6 +248,42 @@ app.post("/order/check", async (req, res) => {
   // Check if items index 1 contains orders object
   if (items[1]?.orders?.orderQuantity > 0) {
     req.session.items = items;
+    const query = await db.query("SELECT order_id FROM orders");
+    const queryRows = query.rows;
+    const map = queryRows.map((item) => item.order_id);
+    const set = new Set(map);
+    const length = [...set];
+    const lengthFinal = length[length.length - 1] + 1;
+
+    const userID = req.user.id;
+    const userFullName = req.user.full_name;
+    // console.log(items);
+    const cart = items.filter(async (item) => {
+      // console.log(item?.orders);
+      if (item?.orders) {
+        const order_id = lengthFinal;
+        const item_name = item.orders.item_name;
+        const quantity = Number(item.orders.orderQuantity);
+        const price = Number(item.orders.price);
+        const total_price = Number(item.orders.totalPrice);
+        const placed_by_id = Number(userID);
+        const placed_by_name = userFullName;
+
+        await db.query(
+          `INSERT INTO orders (order_id, item_name, quantity, price, total_price, placed_by_id, placed_by_name) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+          [
+            order_id,
+            item_name,
+            quantity,
+            price,
+            total_price,
+            placed_by_id,
+            placed_by_name,
+          ]
+        );
+      }
+    });
+
     return res.redirect("/profile");
   } else {
     return res.redirect("/");
