@@ -247,7 +247,8 @@ app.post("/order/check", async (req, res) => {
 
   // Check if items index 1 contains orders object
   if (items[1]?.orders?.orderQuantity > 0) {
-    res.json({ items });
+    req.session.items = items;
+    return res.redirect("/profile");
   } else {
     return res.redirect("/");
   }
@@ -255,8 +256,13 @@ app.post("/order/check", async (req, res) => {
 
 app.get("/profile", (req, res) => {
   const title = "Profile";
+  const items = req.session.items;
   if (req.isAuthenticated()) {
-    res.render("pages/profile.ejs", { pageTitle: title, user: req.user });
+    res.render("pages/profile.ejs", {
+      pageTitle: title,
+      user: req.user,
+      cart: items,
+    });
   } else {
     return res.redirect("/login");
   }

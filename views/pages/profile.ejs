@@ -61,6 +61,49 @@
             <button class="chnge_pw">Change your password</button>
           </div>
         </section>
+
+        <section class="breaker">
+          <h2>Order Here</h2>
+          <table>
+            <tr>
+              <th>Order ID</th>
+              <th>orders</th>
+              <th>Total Price</th>
+              <th>Status</th>
+            </tr>
+          <% if(locals.cart) { %>
+            <% 
+            let cartX = [];
+            const pend = cart.filter(item => item?.orders?.item_name)
+            .map(item => item.orders) 
+            const totalAmount = pend.map(item => Number(item.totalPrice))
+            .reduce((acc, curr) => acc + curr, 0)
+            const item = pend.map(item => {
+              const obj = {
+                item: item.item_name,
+                quantity: item.orderQuantity,
+                price: item.totalPrice
+              }
+              cartX.push(obj)
+            })
+            %>
+
+            <% if(cartX) { %>
+              <%console.log(cartX)%>
+              <tr>
+                <td>003</td>
+                <td>
+                  <% for(const item of cartX) { %>
+                    <p><%= item.item %> <%= item.quantity %></p>
+                  <% } %>
+                </td>
+                <td><%= totalAmount %></td>
+                <td>Pending</td>
+              </tr>
+            <% } %>
+          <% } %>
+          </table>
+        </section>
       </div>
     </main>
   </div>

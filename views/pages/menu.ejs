@@ -21,14 +21,14 @@
     </header>
     <main>
       <div class="container">
-        <h1>Menu page</h1>
+        <h1 class="menu-head">Menu page</h1>
         <table class="menu-display">
           <tr>
             <th>Name</th>
             <th>Price</th>
           </tr>
           <% if(locals.data) { %>
-            <h2 class="default-topo breaker">Dish</h2>
+            <h2 class="default-topo breaker menu-head">Dish</h2>
             <% data.forEach(function(item) { %>
               <% if(item.type === 'Dish') { %>
                 <tr>
@@ -38,7 +38,7 @@
               <% } %>
             <% }); %>
             <% } else { %>
-              <h2 class="default-topo breaker">No Data</h2>
+              <h2 class="default-topo breaker menu-head">No Data</h2>
               <tr>
                 <td>No data</td>
                 <td>No data</td>
@@ -53,7 +53,7 @@
             <th>Price</th>
           </tr>
           <% if(locals.data) { %>
-            <h2 class="default-topo breaker">Drinks</h2>
+            <h2 class="default-topo breaker menu-head">Drinks</h2>
             <% data.forEach(function(item) { %>
               <% if(item.type === 'Drinks') { %>
                 <tr>
@@ -63,7 +63,7 @@
               <% } %>
             <% }); %>
             <% } else { %>
-              <h2 class="default-topo breaker">No Data</h2>
+              <h2 class="default-topo breaker menu-head">No Data</h2>
               <tr>
                 <td>No data</td>
                 <td>No data</td>
@@ -78,7 +78,7 @@
             <th>Price</th>
           </tr>
           <% if(locals.data) { %>
-            <h2 class="default-topo breaker">Others</h2>
+            <h2 class="default-topo breaker menu-head">Others</h2>
             <!-- FILTER DATA -->
             <% const filterOthers = data.filter((item) => item.type !== 'Drinks' && item.type !== 'Dish');%>
             <% if(filterOthers.length > 0) { %>
@@ -95,7 +95,7 @@
               </tr>
             <% } %>
           <% } else { %>
-            <h2 class="default-topo breaker">No Data</h2>
+            <h2 class="default-topo breaker menu-head">No Data</h2>
             <tr>
               <td>No data</td>
               <td>No data</td>
