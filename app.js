@@ -257,11 +257,9 @@ app.post("/order/check", async (req, res) => {
 
     const userID = req.user.id;
     const userFullName = req.user.full_name;
-    // console.log(items);
-    const cart = items.filter(async (item) => {
-      // console.log(item?.orders);
+    items.filter(async (item) => {
       if (item?.orders) {
-        const order_id = lengthFinal;
+        const order_id = lengthFinal || 1; // If there's no order in the db then the default is 1
         const item_name = item.orders.item_name;
         const quantity = Number(item.orders.orderQuantity);
         const price = Number(item.orders.price);
