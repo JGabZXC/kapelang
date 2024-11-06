@@ -144,6 +144,7 @@ app.post("/register/submit", async (req, res) => {
       repass: uRePass,
       address: uAddress,
     };
+
     res.render("pages/register.ejs", {
       pageTitle: title,
       regError,
@@ -157,8 +158,10 @@ app.post("/register/submit", async (req, res) => {
       "INSERT INTO users (email, password, address, full_name, is_admin) VALUES ($1, $2, $3, $4, $5)",
       [uEmail, hashedPassword, uAddress, fullName, is_admin]
     );
+
     if (insert.rowCount > 0) {
       const title = "Login";
+
       res.render("pages/login.ejs", {
         pageTitle: title,
         registerSucc: "Register Successfully. You can now sign in!",
@@ -176,6 +179,7 @@ app.post("/register/submit", async (req, res) => {
       repass: uRePass,
       address: uAddress,
     };
+
     res.render("pages/register.ejs", {
       pageTitle: title,
       regError,
@@ -282,15 +286,30 @@ app.post("/order/check", async (req, res) => {
       }
     });
 
+    const resultX = await db.query(
+      "SELECT * FROM orders where placed_by_id = $1",
+      [Number(user_id)]
+    );
+    const itemX = resultX.rows;
+    req.session.items = itemX;
+
     return res.redirect("/profile");
   } else {
     return res.redirect("/");
   }
 });
 
-app.get("/profile", (req, res) => {
+app.get("/profile", async (req, res) => {
   const title = "Profile";
-  const items = req.session.items;
+  const user_id = req.user.id;
+  const resultX = await db.query(
+    "SELECT * FROM orders where placed_by_id = $1",
+    [Number(user_id)]
+  );
+  const items = resultX.rows;
+  req.session.items = items;
+
+  // console.log(items);
   if (req.isAuthenticated()) {
     res.render("pages/profile.ejs", {
       pageTitle: title,

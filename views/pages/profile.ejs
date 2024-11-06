@@ -71,36 +71,48 @@
               <th>Total Price</th>
               <th>Status</th>
             </tr>
-          <% if(locals.cart) { %>
-            <% 
-            let cartX = [];
-            const pend = cart.filter(item => item?.orders?.item_name)
-            .map(item => item.orders) 
-            const totalAmount = pend.map(item => Number(item.totalPrice))
-            .reduce((acc, curr) => acc + curr, 0)
-            const item = pend.map(item => {
-              const obj = {
-                item: item.item_name,
-                quantity: item.orderQuantity,
-                price: item.totalPrice
-              }
-              cartX.push(obj)
-            })
-            %>
-
-            <% if(cartX) { %>
-              <tr>
-                <td>003</td>
-                <td>
-                  <% for(const item of cartX) { %>
-                    <p><%= item.item %> <%= item.quantity %></p>
-                  <% } %>
-                </td>
-                <td><%= totalAmount %></td>
-                <td>Pending</td>
-              </tr>
-            <% } %>
-          <% } %>
+            <% if(locals.cart) { %>
+              <% 
+                const user_cart = cart;
+                // Step 1: Group items by order_id
+                const groupedOrders = user_cart.reduce((acc, order) => {
+                  if (!acc[order.order_id]) {
+                    acc[order.order_id] = {
+                      items: [],
+                      total_price: 0,
+                      status: order.status
+                    };
+                  }
+                  acc[order.order_id].items.push(`${order.item_name} (${order.quantity})`);
+                  acc[order.order_id].total_price += order.total_price;
+                  return acc;
+                }, {});
+  
+                // Step 2: Get order IDs
+                const orderIDs = Object.keys(groupedOrders);
+                
+  
+                // Step 3: Iterate through each orderID to display them
+              %>
+              <% orderIDs.forEach(orderID => { 
+                const order = groupedOrders[Number(orderID)];
+                console.log(order)
+              %>
+                <tr>
+                  <td><%= orderID %></td>
+                  <td>
+                    <ul>
+                      <% console.log(order) %>
+                    <% order.items.forEach(item => { %>  
+                      <li> <%=item%> </li>
+                    <% }) %>
+                    </ul>  
+                  </td>
+                  <td><%= order.total_price %></td>
+                  <td><%= order.status %></td>
+                </tr>
+              <% })  %>
+              <% } %>
           </table>
         </section>
       </div>
