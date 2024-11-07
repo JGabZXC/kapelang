@@ -398,11 +398,15 @@ app.get("/menu-edit", isAdmin, async (req, res) => {
   const typesSet = new Set(typesDB);
   const typesFDB = [...typesSet];
 
+  const resultDBOrders = await db.query(`SELECT * FROM orders`);
+  const resultDBOrderRows = resultDBOrders.rows;
+
   return res.render("pages/menu-add.ejs", {
     pageTitle: title,
     data,
     typesFDB,
     user: req.user,
+    orders: resultDBOrderRows,
   });
 });
 

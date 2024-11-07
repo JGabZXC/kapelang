@@ -22,90 +22,177 @@
     </header>
     <main>
       <div class="container">
-        <h1>Menu Dashboard</h1>
-        <div class="breaker">
-          <% if(locals.message) { %>
-            <p><%= message %></p>
-          <% } %>
-          <form class="breaker dashboard" action="/menu-edit/create" method="post">
-            <input type="text" name="newItemName" placeholder="Item Name">
-            <input type="text" name="newPrice" placeholder="Price">
-            <input type="text" name="newType" placeholder="Type">
-            <input type="submit" value="Submit">
-          </form>
-        </div>
-        <table class="menu-display menu-dashboard breaker">
-            <tr>
-                <th>id</th>
-                <th class="name">name</th>
-                <th>price</th>
-                <th>type</th>
-                <th>total order</th>
-                <th>control</th>
-            </tr>
-            <% if(locals.data) { %>
-                <%for(const item of data) {%>
-                <tr>
-                    <td><%= item.id %></td>
-                    <td><%= item.item_name %></td>
-                    <td><%= item.price %></td>
-                    <td><%= item.type %></td>
-                    <td><%= item.total_order %></td>
-                    <td><a href="/menu-edit/edit<%= item.id %>">Edit</a> <a href="/menu-edit/delete<%= item.id %>">Delete</a></td>
-                </tr>
-                <% } %>
+        <section class="breaker">
+          <h1>Menu Dashboard</h1>
+          <div class="breaker">
+            <% if(locals.message) { %>
+              <p><%= message %></p>
             <% } %>
-        </table>
-
-        <div class="breaker sort__container">
-          <%
-            const filterType = data.map((item) => item.type)
-            const typeSet = new Set(filterType);
-            const types = [...typeSet];
-          %>
-          <h2 class="default-topo">Sort Type</h2>
-          <form class="sort__form__container" action="/menu-edit/sort" method="POST">
-            <div class="type__con breaker">
-              <label for="type">Type: </label>
-              <select name="type" id="type">
-                <%types.forEach(type => { %>
-                  <option value="<%= type %>"><a href="/menu-edit/?type<%= type %>"><%=type %></a> </option>
-                <% }) %>
-              </select>
-            </div>
-
-            <div class="sortID__con breaker">
-              <label for="sort">Sort id by: </label>
-              <select name="sort" id="sort">
-                <option value="ASC">Ascending</option>
-                <option value="DESC">Descending</option>
-              </select>
-            </div>
-
-            <div class="sortOnly__con breaker">
-            <% if(locals.typesFDB) { %>
-              <label for="only">Only: </label>
-                <select name="only" id="only">
-                  <option value="">ALL</option>
-                  <% typesFDB.forEach(type => { %>
+            <form class="breaker dashboard" action="/menu-edit/create" method="post">
+              <input type="text" name="newItemName" placeholder="Item Name">
+              <input type="text" name="newPrice" placeholder="Price">
+              <input type="text" name="newType" placeholder="Type">
+              <input type="submit" value="Submit">
+            </form>
+          </div>
+          <table class="menu-display menu-dashboard breaker">
+              <tr>
+                  <th>id</th>
+                  <th class="name">name</th>
+                  <th>price</th>
+                  <th>type</th>
+                  <th>total order</th>
+                  <th>control</th>
+              </tr>
+              <% if(locals.data) { %>
+                  <%for(const item of data) {%>
+                  <tr>
+                      <td><%= item.id %></td>
+                      <td><%= item.item_name %></td>
+                      <td><%= item.price %></td>
+                      <td><%= item.type %></td>
+                      <td><%= item.total_order %></td>
+                      <td><a href="/menu-edit/edit<%= item.id %>">Edit</a> <a href="/menu-edit/delete<%= item.id %>">Delete</a></td>
+                  </tr>
+                  <% } %>
+              <% } %>
+          </table>
+          <div class="breaker sort__container">
+            <%
+              const filterType = data.map((item) => item.type)
+              const typeSet = new Set(filterType);
+              const types = [...typeSet];
+            %>
+            <h2 class="default-topo">Sort Type</h2>
+            <form class="sort__form__container" action="/menu-edit/sort" method="POST">
+              <div class="type__con breaker">
+                <label for="type">Type: </label>
+                <select name="type" id="type">
+                  <%types.forEach(type => { %>
                     <option value="<%= type %>"><a href="/menu-edit/?type<%= type %>"><%=type %></a> </option>
-                    
                   <% }) %>
                 </select>
-            <% } else { %>
-              <label for="only">Only: </label>
-                <select name="only" id="only">
-                  <option value="">ALL</option>
+              </div>
+              <div class="sortID__con breaker">
+                <label for="sort">Sort id by: </label>
+                <select name="sort" id="sort">
+                  <option value="ASC">Ascending</option>
+                  <option value="DESC">Descending</option>
                 </select>
-            <% } %>
+              </div>
+              <div class="sortOnly__con breaker">
+              <% if(locals.typesFDB) { %>
+                <label for="only">Only: </label>
+                  <select name="only" id="only">
+                    <option value="">ALL</option>
+                    <% typesFDB.forEach(type => { %>
+                      <option value="<%= type %>"><a href="/menu-edit/?type<%= type %>"><%=type %></a> </option>
+          
+                    <% }) %>
+                  </select>
+              <% } else { %>
+                <label for="only">Only: </label>
+                  <select name="only" id="only">
+                    <option value="">ALL</option>
+                  </select>
+              <% } %>
+            </div>
+          
+              <div class="submit__btn breaker"><input type="submit" value="Submit"></div>
+            </form>
           </div>
-              
+        </section>
 
-            <div class="submit__btn breaker"><input type="submit" value="Submit"></div>
+        <section class="breaker">
+          <h2 class="default-topo">Pending Orders</h2>
+          <table>
+            <tr>
+              <th>order_id</th>
+              <th>orders</th>
+              <th>total price</th>
+              <th>placed by</th>
+              <th>status</th>
+            </tr>
+            <% 
+                const user_cart = orders;
+                // Step 1: Group items by order_id
+                const groupedOrders = user_cart.reduce((acc, order) => {
+                  if (!acc[order.order_id]) {
+                    acc[order.order_id] = {
+                      items: [],
+                      total_price: 0,
+                      placed_by_name: order.placed_by_name,
+                      status: order.status
+                    };
+                  }
+                  acc[order.order_id].items.push(`${order.item_name} (${order.quantity})`);
+                  acc[order.order_id].total_price += order.total_price;
+                  return acc;
+                }, {});
+                console.log(groupedOrders)
+  
+                // Step 2: Get order IDs
+                const orderIDs = Object.keys(groupedOrders);
+                
+  
+                // Step 3: Iterate through each orderID to display them
+              %>
+              <% orderIDs.forEach(orderID => { 
+                const order = groupedOrders[Number(orderID)];
+              %>
+                <tr>
+                  <td><%= orderID %></td>
+                  <td>
+                    <ul>
+                      <% console.log(order) %>
+                    <% order.items.forEach(item => { %>  
+                      <!-- Display each item in list -->
+                      <li><%= item %></li>
+                    <% }) %>
+                    </ul>  
+                  </td>
+                  <td><%= order.total_price %></td>
+                  <td><%= order.placed_by_name %></td>
+                  <td><%= order.status %></td>
+                </tr>
+              <% })  %>
+            <%%>
+          </table>
+        </section>
 
-          </form>
-        </div>
-
+        <section class="breaker">
+          <h2 class="default-topo">All Orders</h2>
+          <table>
+            <tr>
+              <th>id</th>
+              <th>order_id</th>
+              <th>item_name</th>
+              <th>quantity</th>
+              <th>price</th>
+              <th>total_price</th>
+              <th>placed_by_id</th>
+              <th>placed_by_name</th>
+              <th>order_date</th>
+              <th>status</th>
+              <th>served by</th>
+            </tr>
+            <% orders.forEach(order => { %>
+              <tr>
+                <td><%= order.id %></td>  
+                <td><%= order.order_id %></td>  
+                <td><%= order.item_name %></td>  
+                <td><%= order.quantity %></td>  
+                <td><%= order.price %></td>  
+                <td><%= order.total_price %></td>  
+                <td><%= order.placed_by_id %></td>  
+                <td><%= order.placed_by_name %></td>  
+                <td><%= order.order_date %></td>  
+                <td><%= order.status %></td>  
+                <td><%= order.served_by %></td>  
+              </tr>
+            <% }) %>
+          </table>
+        </section>
       </div>
     </main>
   </div>
