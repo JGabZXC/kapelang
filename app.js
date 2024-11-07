@@ -299,6 +299,24 @@ app.post("/order/check", async (req, res) => {
   }
 });
 
+app.post("/order/check2", async (req, res) => {
+  // console.log(req.user);
+  const { cart } = req.body;
+  const itemCart = {
+    user_id: req.user.id,
+    user_fullName: req.user.full_name,
+    cart: cart,
+  };
+
+  if (cart && cart.length > 0) {
+    req.session.itemCart = itemCart;
+    console.log(req.session.itemCart);
+    return res.redirect("/order");
+  }
+
+  return res.redirect("/");
+});
+
 app.get("/profile", async (req, res) => {
   const title = "Profile";
   const user_id = req.user.id;
@@ -308,8 +326,6 @@ app.get("/profile", async (req, res) => {
   );
   const items = resultX.rows;
   req.session.items = items;
-
-  // console.log(items);
   if (req.isAuthenticated()) {
     res.render("pages/profile.ejs", {
       pageTitle: title,
