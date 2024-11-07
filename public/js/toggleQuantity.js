@@ -1,6 +1,6 @@
 "use strict";
 
-const cart = [];
+const cart = []; // Front end cart session after restart this will be cleared
 const form = document.querySelector(".form-order");
 
 function toggleQuantity(id, price, itemName) {
@@ -28,6 +28,7 @@ function toggleQuantity(id, price, itemName) {
     });
   } else {
     const checkIndex = cart.findIndex((item) => Number(item.id) === Number(id));
+    // Removing the item in cart based on index
     if (checkIndex !== -1) {
       cart.splice(checkIndex, 1);
     }
@@ -38,7 +39,7 @@ function updateTotal(id, price) {
   const inputQuantity = document.querySelector(`#quantity_${id}`);
   const labelQuantity = document.querySelector(`#total_${id}`);
 
-  labelQuantity.textContent = `Total: ${
+  labelQuantity.textContent = `Total: ₱${
     Number(inputQuantity.value) * Number(price)
   }`;
 
@@ -49,19 +50,19 @@ function updateTotal(id, price) {
 }
 
 form.addEventListener("submit", (e) => {
-  e.preventDefault();
+  e.preventDefault(); // Preventing from submitting immediately
 
   fetch("/order/check2", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json", // This can be changed to x-wwww-urlencoded but you can still use this, just use express.json() or bodyParser.json()
     },
-    body: JSON.stringify({ cart: cart }),
+    body: JSON.stringify({ cart: cart }), // Transforming cart to JSON format
   })
     .then((response) => {
       if (response.ok) {
         if (response.redirected) {
-          window.location.href = response.url;
+          window.location.href = response.url; // Use the redirection based on the server
         }
       } else {
         console.error("Request failed:", response.status);

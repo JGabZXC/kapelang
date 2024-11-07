@@ -6,7 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="/css/tables.css">
-  <title><%= pageTitle %></title>
+  <title>
+    <%= pageTitle %>
+  </title>
 </head>
 
 <body>
@@ -31,29 +33,33 @@
               <th class="row-action">Action</th>
             </tr>
             <% if(locals.data) { %>
-            <% data.forEach(function(item) { %>
-            <tr>
-              <td class="table-item"><%= item.item_name %></td>
-              <td class="table-item">₱<%= item.price %></td>
-              <td class="table-item action">
-                <!-- Button to add to cart -->
-                <input style="display: none" type="number" id="quantity_<%= item.id %>" oninput="updateTotal('<%= item.id %>', '<%= item.price %>')" />
-                <span style="display: none;" id="total_<%= item.id %>">Total: ₱<%= item.price %></span>
-                <button type="button" class="btn-to-cart<%= item.id %>" onclick="toggleQuantity('<%= item.id %>', '<%= item.price %>', '<%= item.item_name %>')">Add to cart</button>
-              </td>
-            </tr>
-            <% }); %>
-            <% } else { %>
-            <tr>
-              <td>No data</td>
-              <td>No data</td>
-              <td>No data</td>
-            </tr>
-            <% }%>
+              <% data.forEach(function(item) { %>
+                <tr>
+                  <td class="table-item">
+                    <%= item.item_name %>
+                  </td>
+                  <td class="table-item">₱<%= item.price %>
+                  </td>
+                  <td class="table-item action">
+                    <input style="display: none" type="number" id="quantity_<%= item.id %>"
+                      oninput="updateTotal('<%= item.id %>', '<%= item.price %>')" />
+                    <span style="display: none;" id="total_<%= item.id %>">Total: ₱<%= item.price %></span>
+                    <button type="button" class="btn-to-cart<%= item.id %>"
+                      onclick="toggleQuantity('<%= item.id %>', '<%= item.price %>', '<%= item.item_name %>')">Add to
+                      cart</button>
+                  </td>
+                </tr>
+                <% }); %>
+                  <% } else { %>
+                    <tr>
+                      <td>No data</td>
+                      <td>No data</td>
+                      <td>No data</td>
+                    </tr>
+                    <% }%>
           </table>
 
           <form class="form-order" action="/order/check2" method="post">
-            <!-- <div style="display: none;" id="cartItems"></div> -->
             <button type="submit">Go to Cart</button>
           </form>
 

@@ -96,13 +96,11 @@
               %>
               <% orderIDs.forEach(orderID => { 
                 const order = groupedOrders[Number(orderID)];
-                console.log(order)
               %>
                 <tr>
                   <td><%= orderID %></td>
                   <td>
                     <ul>
-                      <% console.log(order) %>
                     <% order.items.forEach(item => { %>  
                       <!-- Display each item in list -->
                       <li><%= item %></li>

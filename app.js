@@ -300,18 +300,47 @@ app.post("/order/check", async (req, res) => {
 });
 
 app.post("/order/check2", async (req, res) => {
-  // console.log(req.user);
   const { cart } = req.body;
+
+  const query = await db.query("SELECT order_id FROM orders");
+  const queryRows = query.rows;
+  const map = queryRows.map((item) => item.order_id);
+  const set = new Set(map);
+  const length = [...set];
+  const lengthFin = length[length.length - 1] + 1 || 1; // If length is not present then use 1
   const itemCart = {
+    // user id and full name can change base on the sessions or credentials that was logged in
     user_id: req.user.id,
     user_fullName: req.user.full_name,
-    cart: cart,
+    cart: cart, // Storing cart here
   };
 
   if (cart && cart.length > 0) {
-    req.session.itemCart = itemCart;
-    console.log(req.session.itemCart);
-    return res.redirect("/order");
+    req.session.itemCart = itemCart; // Storing the itemCart in session
+    cart.forEach(async (item) => {
+      const order_id = lengthFin;
+      const itemName = item.itemName;
+      const quantity = item.quantity;
+      const price = item.price;
+      const totalPrice = item.quantity * item.price;
+      const placed_by_id = req.user.id;
+      const placed_by_name = req.user.full_name;
+
+      await db.query(
+        `INSERT INTO orders (order_id, item_name, quantity, price, total_price, placed_by_id, placed_by_name) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+        [
+          order_id,
+          itemName,
+          quantity,
+          price,
+          totalPrice,
+          placed_by_id,
+          placed_by_name,
+        ]
+      );
+    });
+
+    return res.redirect("/profile");
   }
 
   return res.redirect("/");
@@ -319,6 +348,7 @@ app.post("/order/check2", async (req, res) => {
 
 app.get("/profile", async (req, res) => {
   const title = "Profile";
+  // console.log(req.session.itemCart);
   const user_id = req.user.id;
   const resultX = await db.query(
     "SELECT * FROM orders where placed_by_id = $1",
@@ -424,6 +454,17 @@ app.get("/menu-edit", isAdmin, async (req, res) => {
     user: req.user,
     orders: resultDBOrderRows,
   });
+});
+
+app.post("/menu-edit/served/:id", isAdmin, async (req, res) => {
+  const { id } = req.params;
+
+  await db.query(`UPDATE orders SET status = $1 WHERE order_id = $2 `, [
+    "Served",
+    Number(id),
+  ]);
+
+  return res.redirect("/menu-edit");
 });
 
 app.get("/menu-edit/edit:id", isAdmin, async (req, res) => {
